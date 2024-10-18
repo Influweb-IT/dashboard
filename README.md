@@ -1,28 +1,30 @@
-Readme file
 
-Requirements
+**Requirements**
+
+see req folder for list of packages of the streamlit conda environment
+#### note: the scripts should run in the same folder of the streamlit environment
 
 anaconda
-python 3.9 (conda)
-streamlit (pip)
-pandas (conda)
-numpy (conda)
-scipy (conda)
-geopandas (conda)
-pyogrio (pip)
+python 3.9 (conda)  
+streamlit (pip)  
+pandas (conda)  
+numpy (conda)  
+scipy (conda)  
+geopandas (conda)  
+pyogrio (pip)  
 
 
 path of data: "/Users/mattiamazzoli/influweb-resources/syndromes/" (this can be changed to a directory in Igea where we update data automatically every week)
 
-Code flow
+**Code flow**
 
 1) streamlit run DataTreatment.py
 
 Input files:
 - pop_reg.csv (regions populations)
 - Limiti01012024_g-2 (regions shapefile)
-- "/Users/mattiamazzoli/influweb-resources/syndromes/intake/" (intake files obtained with bulk extraction)
-- "/Users/mattiamazzoli/influweb-resources/syndromes/weekly/" (weekly files obtained with bulk extraction)
+- "./intake/" (intake files obtained with bulk extraction)
+- "./weekly/" (weekly files obtained with bulk extraction)
 
 This generates:
 - active users.csv
