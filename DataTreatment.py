@@ -1,48 +1,15 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 from __future__ import division
-from matplotlib import *
 import numpy as np
 import operator
 import geopandas as gpd
 import pgeocode
-import streamlit as st
-
-
-# In[2]:
-
-
-#pandas and matplotlib
-#%matplotlib inline
 import pandas as pd
 import csv
-from matplotlib import pyplot as plt
 from collections import Counter, defaultdict
 import collections as col
-
-
-# In[3]:
-
-
-#data management
-
 import os, sys, glob, re, calendar, datetime
-from matplotlib.pyplot import cm
-import matplotlib.ticker as ticker
-import matplotlib.dates as mdates
 from datetime import date, timedelta
 from time import sleep
-from matplotlib import gridspec
-
-
-# ## Get Data
-
-# In[4]:
-
 
 #Convert weeks with formats like 2014-2 to proper format 2014-02
 def fix_yearweek(date_string):
@@ -51,9 +18,7 @@ def fix_yearweek(date_string):
     
     assert re.match("\d{4}-\d{2}$", fixed)
     return fixed
-#######################
 
-#######################
 def weekMinus(week, minusweek):
     #week is a string 'yyyy-w'
     yr, wk = map(lambda x: int(x), week.split('-'))
@@ -61,9 +26,7 @@ def weekMinus(week, minusweek):
     res_date = mid_date - datetime.timedelta(days=7*minusweek)
     isoyear, isoweek, isoday = res_date.isocalendar()
     return str(isoyear) + '-' + str(isoweek)
-#######################
 
-#######################
 def getMiddleDayOfWeek(year, week):
     d = datetime.date(year,1,1)
     if(d.weekday()>3):
@@ -72,9 +35,7 @@ def getMiddleDayOfWeek(year, week):
         d = d - datetime.timedelta(d.weekday())
     dlt = datetime.timedelta(days = (week-1)*7)
     return d + dlt + datetime.timedelta(days=3)
-#######################
 
-#######################
 def weekPlusOne(week):
     #week is a string 'yyyy-w'
     yr, wk = map(lambda x: int(x), week.split('-'))
@@ -82,18 +43,13 @@ def weekPlusOne(week):
     res_date = mid_date + datetime.timedelta(days=7)
     isoyear, isoweek, isoday = res_date.isocalendar()
     return str(isoyear) + '-' + str(isoweek)
-#######################
 
-
-#######################
 def days_difference(date1, date2):
     y1,m1,d1 = map(lambda x: int(x), date1.split('-'))
     y2,m2,d2 = map(lambda x: int(x), date2.split('-'))
     delta_days = (datetime.date(y1,m1,d1) - datetime.date(y2,m2,d2)).days
     return delta_days
-#######################
 
-#######################
 def get_onset_date( submission_date, symptoms_date, fever_date ):
     onset_date = submission_date
     if pd.notnull(symptoms_date): 
@@ -104,7 +60,6 @@ def get_onset_date( submission_date, symptoms_date, fever_date ):
             onset_date = fever_date    
     return onset_date
 
-#######################
 def get_week_of_activity(global_id, submission_weeks):
     activity_weeks = []
     for week in submission_weeks: 
@@ -114,7 +69,6 @@ def get_week_of_activity(global_id, submission_weeks):
             activity_weeks.append(wk)
             wk = fix_yearweek(weekPlusOne(wk))
     return sorted(set(activity_weeks))
-#######################
 
 def yearweek_to_ts(x):
     year = x.split('-')[0]
@@ -122,8 +76,6 @@ def yearweek_to_ts(x):
     date = "{}-{}-1".format(year, week)
     dt = datetime.datetime.strptime(date, "%Y-%W-%w")
     return dt.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + 'Z'
-
-#######################
 
 def get_ILI_ECDC(row):
     ILI=False
@@ -134,16 +86,12 @@ def get_ILI_ECDC(row):
                     ILI=True  
     return ILI
 
-#######################
 def get_ILI_WHO(row):
     ILI_WHO=False
     if row.symptoms==True and row.ARI==True: 
         if row.Fever==True and row.Cough==True: #fever and cough
             ILI_WHO=True  
     return ILI_WHO
-
-#######################
-
 
 def get_ARI(row):
     ARI=False
@@ -152,11 +100,6 @@ def get_ARI(row):
             if row.Cough==True or row['Sore throat']==True or row['Shortness of breath']==True or row['Runny or blocked nose']==True:
                 ARI=True  
     return ARI
-
-#######################
-
-
-# In[5]:
 
 
 from scipy.stats import beta
@@ -176,10 +119,6 @@ def clopper_pearson(p,n):
         ci_u[season], ci_o[season] = p[season] - p_u[season], p_o[season] - p[season] #translate ci to interval from the estimation
     d = pd.DataFrame.from_dict([ci_u, ci_o])
     return d
-
-
-# In[6]:
-
 
 ###
 # Return previous week (es: lastweek(datetime.datetime.strptime('18112019', "%d%m%Y").date()) -> 2019-46)
@@ -340,24 +279,14 @@ def change_regname(x):
     elif x=="Valle D'Aosta":
         return "Valle d'Aosta"
     else: return x
-    
-
-
-# ## Data
-
-# In[238]:
-
 
 YEAR_MIN, YEAR_MAX = 2023, 2024
 
 dates = datetime.date.today()
 
 last_week = lastweek(dates)
-#print(f"Computing week: {last_week}")
 
 my_yearweek = last_week
-#############
-# season
 min_year = str(YEAR_MIN)
 max_year = str(YEAR_MAX)
 previous_season = str(int(max_year)-2)+'-'+str(int(max_year)-1)
@@ -365,10 +294,6 @@ first_day = min_year+'-11-01' # from Nov 1stM
 last_day = max_year+'-05-01' # to May 1st
 print(f"Min year: {min_year}, Max year: {max_year}, Prev season: {previous_season}")
 print(f"First day: {first_day}, Last day: {last_day}")
-
-
-# In[239]:
-
 
 # CALENDAR
 delta = datetime.timedelta(days=1)
@@ -403,13 +328,8 @@ for yr_min in range(YEAR_MIN, YEAR_MAX, 1):
             weeknr=str(date_f.isocalendar().year)+'-'+str(date_f.isocalendar().week).zfill(2)
             season_week[season].add(weeknr)
             week_season[weeknr]=season
-#############
 
 seasons = set(season_week.keys())
-
-
-# In[240]:
-
 
 date_season = dict()
 for yr_min in range(YEAR_MIN, YEAR_MAX, 1):
@@ -425,7 +345,8 @@ for yr_min in range(YEAR_MIN, YEAR_MAX, 1):
 # In[241]:
 
 
-path = '/Users/mattiamazzoli/influweb-resources/syndromes/intake/'
+path = './data/raw/intake/'
+os.makedirs(path, exist_ok=True)
 
 dfs = []
 import os, glob
@@ -435,12 +356,6 @@ for filename in glob.glob(path+'*.csv'):
         dfs.append(pd.read_csv(f))
 
 intake_complete = pd.concat(dfs)
-
-
-# In[242]:
-
-
-#############
 
 ############
 ## INTAKE ##
@@ -487,10 +402,6 @@ def assign_reg(x):
 intake_complete['reg'] = intake_complete.CAP.apply(lambda x: assign_reg(x) if x.isdigit() else np.nan)
 intake_complete['reg'] = intake_complete['reg'].apply(lambda x: change_regname(x))
 
-
-# In[243]:
-
-
 # add occupation and education degree
 intake_complete[['Q4','Q4d_0','Q4d_1','Q4d_2','Q4d_3','Q4d_4','Q4d_5']] = intake_complete[['intake.Q4','intake.Q4d.0','intake.Q4d.1','intake.Q4d.2','intake.Q4d.3','intake.Q4d.4','intake.Q4d.5']].map(lambda x: translate(x))
 intake_complete['occupation'] = intake_complete['intake.Q4'].apply(lambda x: occupation(x))
@@ -500,17 +411,10 @@ intake_complete['education'] = intake_complete['edu'].apply(lambda x: get_edu(x)
 
 intake_complete = intake_complete[intake_complete.age_class!='nan']
 
-
-# In[244]:
-
-
 intake = intake_complete[["participantID","age_class","gender","reg","edu","occupation","intake_timestamp","intake_submission"]]
 
-
-# In[245]:
-
-
-path = '/Users/mattiamazzoli/influweb-resources/syndromes/weekly/'
+path = './data/raw/weekly/'
+os.makedirs(path, exist_ok=True)
 
 dfs = []
 import os, glob
@@ -520,9 +424,6 @@ for filename in glob.glob(path+'*.csv'):
         dfs.append(pd.read_csv(f))
 
 weekly_complete = pd.concat(dfs)
-
-
-# In[246]:
 
 
 ############
@@ -580,9 +481,6 @@ weekly_complete = weekly_complete[weekly_complete.season =='2023-2024']
 weekly = weekly_complete.drop_duplicates(['participantID','submission_week'], keep='last', inplace=False)
 
 
-# In[247]:
-
-
 #####################
 ## WEEKLY + INTAKE ##
 #####################
@@ -597,16 +495,10 @@ data = data.merge(intake, on=["participantID", "intake_timestamp"], how="left")
 assert(data.shape[0]==weekly.shape[0])
 
 
-# In[248]:
-
-
 all_weeks = sorted(set(data.submission_week.dropna().values)) #all weeks in the period
 real_weeks = sorted(set(week_season.keys())) #only weeks in seasons
 
 data = data[~pd.isna(data.season)]
-
-
-# In[249]:
 
 
 # ACTIVE USERS (in real-time):
@@ -628,34 +520,14 @@ for participantID, group in data.groupby('participantID'):
         weekly_active_user[wk] += 1
         
 wau = pd.Series(weekly_active_user).reindex(real_weeks).sort_index()
-wau.reindex(all_weeks).plot()
-plt.axhline(100, color='gray', ls='--')
-
-
-# In[250]:
-
-
-#data = data[data.ID!='61da922e6250fa30c9cd8b3a']
-
-
-# In[251]:
-
 
 all_dates = sorted(pd.Series(date_week.keys()))
 all_symptoms = ['Fever','Chills','Runny or blocked nose','Sneezing','Sore throat','Cough','Shortness of breath','Headache',
                  'Muscle/joint pain','Chest pain','Malaise','Loss of appetite','Coloured sputum','Watery, bloodshot eyes'
                  ,'Nausea','Vomiting','Diarrhoea','Stomach ache','Other','Rash','Loss of taste', 'Nose bleed', 'Loss of smell','Sudden onset','Sudden fever']
-#data[all_symptoms] = data[all_symptoms].astype(int)
-
-
-# In[252]:
-
 
 all_weeks_tf = [yearweek_to_ts(x) for x in all_weeks]
 real_weeks_tf= [yearweek_to_ts(x) for x in real_weeks]
-
-
-# In[253]:
 
 
 data_ILI = data.copy(deep=True)
@@ -696,11 +568,8 @@ data_ILI.loc[(data_ILI['ARI']==True) & (data_ILI['submission_week']==data_ILI['f
 data_ILI = data_ILI.drop_duplicates(['participantID','onset_week'], keep='last')
 
 
-# In[254]:
-
-
 weekly_ARI = {'onset_week':0.0}
-if data_ILI[(data_ILI['ARI']==True)].shape[0]>0:# & (data_ILI['onset_week'].isin(season_week[my_season]))].shape[0]>0:
+if data_ILI[(data_ILI['ARI']==True)].shape[0]>0:
     weekly_ARI = data_ILI[(data_ILI.ARI==True)].groupby('onset_week').size().to_dict()
 season_ARI = data_ILI[(data_ILI.ARI==True)].groupby('season').size()
 
@@ -717,11 +586,6 @@ for week in sorted(submission_weeks):
     if active>act_threshold and ARI>0:
         incidence_ARI[week] = round( ARI*1.0/active*rescaling, 2 )
     else: incidence_ARI[week] = 0
-##################################
-
-
-# In[255]:
-
 
 weekly_ILI = {'onset_week':0.0}
 
@@ -741,86 +605,40 @@ for week in sorted(submission_weeks):
     if active>act_threshold and ILI>0:
         incidence[week] = round( ILI*1.0/active*rescaling, 2 )
     else: incidence[week] = 0
-##################################
 
-
-# In[256]:
-
+output_dir = './data/dashboard/'
+os.makedirs(output_dir, exist_ok=True)
 
 #save epi values
-pd.Series(incidence).to_frame('incidence').to_csv('ILI_incidence.csv', header=True)
-pd.Series(incidence_ARI).to_frame('incidence').to_csv('ARI_incidence.csv', header=True)
-pd.Series(wau).to_frame('active users').to_csv('active_users.csv', header=True)
-
-
-# In[257]:
-
+pd.Series(incidence).to_frame('incidence').to_csv(os.path.join(output_dir, 'ILI_incidence.csv'), header=True)
+pd.Series(incidence_ARI).to_frame('incidence').to_csv(os.path.join(output_dir, 'ARI_incidence.csv'), header=True)
+pd.Series(wau).to_frame('active users').to_csv(os.path.join(output_dir, 'active_users.csv'), header=True)
 
 #save participants values
-intake['gender'].value_counts().to_csv('gender.csv', header=True)
-intake['edu'].value_counts().to_csv('education.csv', header=True)
-intake['occupation'].value_counts().to_csv('occupation.csv', header=True)
-intake['age_class'].value_counts().to_csv('age.csv', header=True)
+intake['gender'].value_counts().to_csv(os.path.join(output_dir, 'gender.csv'), header=True)
+intake['edu'].value_counts().to_csv(os.path.join(output_dir, 'education.csv'), header=True)
+intake['occupation'].value_counts().to_csv(os.path.join(output_dir, 'occupation.csv'), header=True)
+intake['age_class'].value_counts().to_csv(os.path.join(output_dir, 'age.csv'), header=True)
 
 
 # ## Mappa
 
-# In[481]:
-
-
 pop_reg = pd.read_csv('pop_reg.csv',header=0, names=['regione','pop']).set_index('regione').squeeze()
-
-
-# In[482]:
-
 
 regioni = gpd.read_file('Limiti01012024_g-2/Reg01012024_g/Reg01012024_g_WGS84.shp')
 regioni = regioni[['DEN_REG','geometry']].set_index('DEN_REG')
 
-
-# In[483]:
-
-
 partecipanti_reg = data_ILI.reg.value_counts().squeeze().reset_index().set_index('reg')
-
-
-# In[484]:
-
 
 part_reg = intake.reg.value_counts().squeeze()/pop_reg * 100000
 part_reg = part_reg.reindex(list(regioni.index))
 part_reg = part_reg.reset_index().set_index('index')
 
-
-# In[485]:
-
-
 reg_map = regioni.join(part_reg).reset_index().rename(columns={0:'count'})
 reg_map = reg_map[['DEN_REG','count','geometry']].set_index('DEN_REG')
-
-
-# In[486]:
-
-
-reg_map
-
-
-# In[493]:
-
 
 ar = ((data_ILI[data_ILI.ILI==True].reg.value_counts().reset_index().set_index('reg')/partecipanti_reg).reindex(list(regioni.index)).fillna(0)*100)
 ar = ar.reset_index().set_index('reg').rename(columns={'count':'ar'})
 
-
-# In[495]:
-
-
 reg_map_ar = reg_map.join(ar,how='left').reset_index()
-reg_map_ar.to_csv('reg_map.csv', index=False)
-
-
-# In[ ]:
-
-
-
-
+reg_map_ar.to_csv(os.path.join(output_dir, 'reg_map.csv'), index=False)

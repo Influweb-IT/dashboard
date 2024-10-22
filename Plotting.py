@@ -72,10 +72,12 @@ rescaling = 1000
 # In[19]:
 
 
+input_dir = 'data/dashboard'
+
 # get epi values
-incidence = pd.read_csv('ILI_incidence.csv', index_col=0, header=0).squeeze()
-incidence_ARI = pd.read_csv('ARI_incidence.csv', index_col=0, header=0).squeeze()
-wau = pd.read_csv('active_users.csv', index_col=0, header=0).squeeze()
+incidence = pd.read_csv(os.path.join(input_dir, 'ILI_incidence.csv'), index_col=0, header=0).squeeze()
+incidence_ARI = pd.read_csv(os.path.join(input_dir, 'ARI_incidence.csv'), index_col=0, header=0).squeeze()
+wau = pd.read_csv(os.path.join(input_dir, 'active_users.csv'), index_col=0, header=0).squeeze()
 
 
 # In[20]:
@@ -83,10 +85,10 @@ wau = pd.read_csv('active_users.csv', index_col=0, header=0).squeeze()
 
 # get participants values
 
-gender =  pd.read_csv('gender.csv', index_col=0, header=0).squeeze()
-education =  pd.read_csv('education.csv', index_col=0, header=0).squeeze()
-occupation =  pd.read_csv('occupation.csv', index_col=0, header=0).squeeze()
-age =  pd.read_csv('age.csv', index_col=0, header=0).squeeze()
+gender =  pd.read_csv(os.path.join(input_dir, 'gender.csv'), index_col=0, header=0).squeeze()
+education =  pd.read_csv(os.path.join(input_dir, 'education.csv'), index_col=0, header=0).squeeze()
+occupation =  pd.read_csv(os.path.join(input_dir, 'occupation.csv'), index_col=0, header=0).squeeze()
+age =  pd.read_csv(os.path.join(input_dir, 'age.csv'), index_col=0, header=0).squeeze()
 
 gender = gender.rename({'Male':'Maschio','Female':'Femmina','Other':'Altro'})
 occupation = occupation.rename({'full_time':'Tempo pieno','retired':'In pensione','self-employed':'Autonomo',
@@ -195,7 +197,7 @@ st.write("La seconda mappa mostra la copertura regionale dei partecipanti in ogn
 # In[45]:
 
 
-df = gpd.read_file('reg_map.csv', ignore_geometry=True)
+df = gpd.read_file(os.path.join(input_dir, 'reg_map.csv'), ignore_geometry=True)
 # Create geometry objects from WKT strings
 df['geometry'] = gpd.GeoSeries.from_wkt(df['geometry'])
 df['count'] = df['count'].astype(float)
