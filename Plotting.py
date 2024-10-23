@@ -1,48 +1,20 @@
-#!/usr/bin/env python
-# coding: utf-8
 
-# In[14]:
-
-
-from __future__ import division
 from matplotlib import *
 import numpy as np
-import operator
 import geopandas as gpd
 import shapely
 import streamlit as st
 
-
-# In[15]:
-
-
 #pandas and matplotlib
-#%matplotlib inline
+
 import pandas as pd
 import csv
 from matplotlib import pyplot as plt
-from collections import Counter, defaultdict
-import collections as col
-
-
-# In[16]:
-
 
 #data management
-
-import os, sys, glob, re, calendar, datetime
-from matplotlib.pyplot import cm
-import matplotlib.ticker as ticker
-import matplotlib.dates as mdates
-from datetime import date, timedelta
-from time import sleep
-from matplotlib import gridspec
-
+import os
 
 # ## Get Data
-
-# In[17]:
-
 
 from scipy.stats import beta
 def clopper_pearson(p,n):
@@ -62,15 +34,7 @@ def clopper_pearson(p,n):
     d = pd.DataFrame.from_dict([ci_u, ci_o])
     return d
 
-
-# In[18]:
-
-
 rescaling = 1000
-
-
-# In[19]:
-
 
 input_dir = 'data/dashboard'
 
@@ -79,8 +43,6 @@ incidence = pd.read_csv(os.path.join(input_dir, 'ILI_incidence.csv'), index_col=
 incidence_ARI = pd.read_csv(os.path.join(input_dir, 'ARI_incidence.csv'), index_col=0, header=0).squeeze()
 wau = pd.read_csv(os.path.join(input_dir, 'active_users.csv'), index_col=0, header=0).squeeze()
 
-
-# In[20]:
 
 
 # get participants values
@@ -99,24 +61,12 @@ education = education.rename({'master_phd':'Master o PhD','high_school':'Scuola 
 age= age.reindex(['<18','18-40','41-65','>65'])
 
 
-
-# In[21]:
-
-
 st.title("Incidenza da sindromi simil-influenzali")
-
-
-# In[22]:
 
 
 st.write("In questa sezione potete trovare i dati aggiornati raccolti da Influweb per quanto riguarda i sintomi influenzali.")
 
-st.write("Il grafico riportato qui sotto mostra la curva di incidenza dei probabili casi di sindrome simil-influenzale (ILI) e casi di sindrome respiratoria acuta (ARI) osservati in tutta Italia nell'ultimo anno. La curva continua rappresenta una stima dell'incidenza nella settimana corrente, l'area transparente rappresenta l'incertezza del 95% sulla stima.")
-
-
-
-
-# In[23]:
+st.write("Il grafico riportato qui sotto mostra la curva di incidenza dei probabili casi di sindrome simil-influenzale (ILI) e casi di sindrome respiratoria acuta (ARI) osservati in tutta Italia nell'ultimo anno. La curva continua rappresenta una stima dell'incidenza nella settimana corrente, l'area trasparente rappresenta l'incertezza del 95% sulla stima.")
 
 
 # Initialise variable
@@ -146,16 +96,11 @@ with tab2:
     st.pyplot(fig2)
 
 
-# In[24]:
-
 
 st.title("Composizione demografica dei partecipanti")
 
 st.write("In questa sezione mostriamo le caratteristiche demografiche dei partecipanti nella stagione corrente.")
 st.write("I grafici riportati qui sotto mostrano la composizione demograficha in termini di genere, età, educazione e occupazione.")
-
-
-# In[25]:
 
 
 #https://coolors.co/palette/220901-621708-941b0c-bc3908-f6aa1c
@@ -185,8 +130,6 @@ plt.tight_layout()
 st.pyplot(fig3)
 
 
-# In[ ]:
-
 
 st.title("Aspetti geografici")
 st.write("La prima mappa mostra l'incidenza cumulativa nella stagione 2023-2024 dei probabili casi di sindrome simil-influenzale (ILI) riportati in ogni regione dai partecipanti di InfluWeb.")
@@ -194,7 +137,6 @@ st.write("La prima mappa mostra l'incidenza cumulativa nella stagione 2023-2024 
 st.write("La seconda mappa mostra la copertura regionale dei partecipanti in ogni regione espressa come numero di partecipanti per 100,000 abitanti.") 
 
 
-# In[45]:
 
 
 df = gpd.read_file(os.path.join(input_dir, 'reg_map.csv'), ignore_geometry=True)
@@ -207,7 +149,6 @@ df['ar'] = df['ar'].astype(float)
 gdf = gpd.GeoDataFrame(df)
 
 
-# In[48]:
 
 
 tab4, tab5 = st.tabs(["ILI attack rate", "Partecipanti"])
@@ -227,7 +168,6 @@ with tab5:
     st.pyplot(fig5)
 
 
-# In[ ]:
 
 
 

@@ -274,6 +274,7 @@ for yr_min in range(YEAR_MIN, YEAR_MAX, 1):
 
 
 path = './data/raw/intake/'
+
 os.makedirs(path, exist_ok=True)
 
 dfs = []
