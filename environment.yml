@@ -1,10 +1,11 @@
-name: myenv
+name: influweb-dashboard
 channels:
   - conda-forge
   - anaconda
   - defaults
 dependencies:
-   - numpy=1.26.4=py310heeff2f4_0
-   - geopandas=0.14.4=pyhd8ed1ab_0
-   - pgeocode=0.4.1=pyhd8ed1ab_0
-   - pandas=2.2.2=py310h6a678d5_0
+   - numpy=1.26.4
+   - geopandas=0.14.4
+   - pgeocode=0.4.1
+   - pandas=2.2.2
+   - streamlit=1.39.0
