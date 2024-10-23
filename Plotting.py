@@ -2,7 +2,6 @@
 from matplotlib import *
 import numpy as np
 import geopandas as gpd
-import shapely
 import streamlit as st
 
 #pandas and matplotlib
