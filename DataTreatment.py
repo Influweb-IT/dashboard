@@ -273,8 +273,7 @@ for yr_min in range(YEAR_MIN, YEAR_MAX, 1):
 # In[241]:
 
 
-#path = './data/raw/intake/'
-path = '/Users/mattiamazzoli/influweb-resources/syndromes/intake/'
+path = './data/raw/intake/'
 
 os.makedirs(path, exist_ok=True)
 
@@ -342,8 +341,7 @@ intake_complete = intake_complete[intake_complete.age_class!='nan']
 
 intake = intake_complete[["participantID","age_class","gender","reg","edu","occupation","intake_timestamp","intake_submission"]]
 
-#path = './data/raw/weekly/'
-path = '/Users/mattiamazzoli/influweb-resources/syndromes/weekly/'
+path = './data/raw/weekly/'
 os.makedirs(path, exist_ok=True)
 
 dfs = []
