@@ -1,15 +1,10 @@
-from __future__ import division
 import numpy as np
-import operator
 import geopandas as gpd
 import pgeocode
 import pandas as pd
-import csv
 from collections import Counter, defaultdict
-import collections as col
-import os, sys, glob, re, calendar, datetime
+import os, sys, glob, re, datetime
 from datetime import date, timedelta
-from time import sleep
 
 #Convert weeks with formats like 2014-2 to proper format 2014-02
 def fix_yearweek(date_string):
@@ -23,24 +18,24 @@ def weekMinus(week, minusweek):
     #week is a string 'yyyy-w'
     yr, wk = map(lambda x: int(x), week.split('-'))
     mid_date = getMiddleDayOfWeek(yr, wk)
-    res_date = mid_date - datetime.timedelta(days=7*minusweek)
+    res_date = mid_date - timedelta(days=7*minusweek)
     isoyear, isoweek, isoday = res_date.isocalendar()
     return str(isoyear) + '-' + str(isoweek)
 
 def getMiddleDayOfWeek(year, week):
     d = datetime.date(year,1,1)
     if(d.weekday()>3):
-        d = d+datetime.timedelta(7-d.weekday())
+        d = d+timedelta(7-d.weekday())
     else:
-        d = d - datetime.timedelta(d.weekday())
-    dlt = datetime.timedelta(days = (week-1)*7)
-    return d + dlt + datetime.timedelta(days=3)
+        d = d - timedelta(d.weekday())
+    dlt = timedelta(days = (week-1)*7)
+    return d + dlt + timedelta(days=3)
 
 def weekPlusOne(week):
     #week is a string 'yyyy-w'
     yr, wk = map(lambda x: int(x), week.split('-'))
     mid_date = getMiddleDayOfWeek(yr, wk)
-    res_date = mid_date + datetime.timedelta(days=7)
+    res_date = mid_date + timedelta(days=7)
     isoyear, isoweek, isoday = res_date.isocalendar()
     return str(isoyear) + '-' + str(isoweek)
 
@@ -86,13 +81,6 @@ def get_ILI_ECDC(row):
                     ILI=True  
     return ILI
 
-def get_ILI_WHO(row):
-    ILI_WHO=False
-    if row.symptoms==True and row.ARI==True: 
-        if row.Fever==True and row.Cough==True: #fever and cough
-            ILI_WHO=True  
-    return ILI_WHO
-
 def get_ARI(row):
     ARI=False
     if row.symptoms==True:
@@ -100,25 +88,6 @@ def get_ARI(row):
             if row.Cough==True or row['Sore throat']==True or row['Shortness of breath']==True or row['Runny or blocked nose']==True:
                 ARI=True  
     return ARI
-
-
-from scipy.stats import beta
-def clopper_pearson(p,n):
-    alpha = 0.05
-    k = p*n
-    p_u,p_o={},{}
-    ci_u,ci_o={},{}
-    for season in p.keys():
-        kk=k[season]
-        nn=n[season]
-        p_u[season], p_o[season] = beta.ppf([alpha/2, 1 - alpha/2], [kk, kk + 1], [nn - kk + 1, nn - kk])
-        if np.isnan(p_u[season]):
-            p_u[season] = 0
-        if np.isnan(p_o[season]):
-            p_o[season] = 1
-        ci_u[season], ci_o[season] = p[season] - p_u[season], p_o[season] - p[season] #translate ci to interval from the estimation
-    d = pd.DataFrame.from_dict([ci_u, ci_o])
-    return d
 
 ###
 # Return previous week (es: lastweek(datetime.datetime.strptime('18112019', "%d%m%Y").date()) -> 2019-46)
@@ -130,32 +99,6 @@ def lastweek(today=date.today()):
         if x!=d1:
               return fix_yearweek(x)
 
-
-def get_season_fromweek(week, week_th):
-    w_y_list = week.split('-')
-    if int(w_y_list[1]) >=week_th:         #es. week_th=45 -> new season after 45 week
-        season = str(w_y_list[0])+'-'+str(int(w_y_list[0])+1)
-    else:
-        season = str(int(w_y_list[0])-1)+'-'+str(w_y_list[0])
-    return season
-
-
-def week_from_date(data):
-    x = datetime.datetime.strptime(data, '%Y-%m-%d')
-    if len(str(x.isocalendar()[1]))==2:
-        w = str(x.isocalendar()[0])+'-'+str(x.isocalendar()[1])
-    else:
-        w = str(x.isocalendar()[0])+ '-0' +str(x.isocalendar()[1])
-    return w
-
-
-def get_epoch(x):
-    p = '%Y-%m-%d %H:%M:%S'
-    mytime = str(x)[:19]
-    epoch = datetime.datetime(1970, 1, 1)
-    tempo = int((datetime.datetime.strptime(mytime, p) - epoch).total_seconds())
-    return tempo
-    
 def unite(x):
     #print(x)
     aa=np.where(x)[0]
@@ -175,8 +118,7 @@ def translate(entry):
     elif entry=='TRUE':
         entry=True
     return entry
-    
-yearsec=60*60*24*365
+
 def get_age(x):
     subm=int(x.intake_submission[:4])
     if any([x.version=='22-12-2', x.version=='21-11-1', x.version=='23-10-1']):
@@ -248,19 +190,6 @@ def get_edu(x):
     elif x=='master_phd' or x=='bachelor':
         return 'higher'
 
-    
-def get_edu(x):
-    if str(x)=='None' or str(x)=='none' or x==np.nan or x=='student':
-        return 'elementary'
-    elif x=='int_school' or x=='high_school':
-        return 'secondary'
-    elif x=='master_phd' or x=='bachelor':
-        return 'higher'
-
-
-# In[237]:
-
-
 def change_regname(x):
     if x=='Emilia-Romagna':
         return 'Emilia-Romagna' 
@@ -296,7 +225,7 @@ print(f"Min year: {min_year}, Max year: {max_year}, Prev season: {previous_seaso
 print(f"First day: {first_day}, Last day: {last_day}")
 
 # CALENDAR
-delta = datetime.timedelta(days=1)
+delta = timedelta(days=1)
 curr, end = datetime.date(YEAR_MIN, 11, 1), datetime.date.today() #datetime.date(YEAR_MAX, 5, 1)
 date_week = dict()
 llyearweek, week_to_consider = [], []
@@ -311,7 +240,6 @@ while curr <= end:
             llyearweek.append(yearweek)
     curr+=delta
 
-from collections import defaultdict
 date_season = dict()
 season_week = defaultdict(set)
 week_season = {}
@@ -349,7 +277,6 @@ path = './data/raw/intake/'
 os.makedirs(path, exist_ok=True)
 
 dfs = []
-import os, glob
 for filename in glob.glob(path+'*.csv'):
     with open(os.path.join(os.getcwd(), filename), 'r') as f: # open in readonly mode
         # do your stuff
@@ -417,7 +344,7 @@ path = './data/raw/weekly/'
 os.makedirs(path, exist_ok=True)
 
 dfs = []
-import os, glob
+
 for filename in glob.glob(path+'*.csv'):
     with open(os.path.join(os.getcwd(), filename), 'r') as f: # open in readonly mode
         # do your stuff
