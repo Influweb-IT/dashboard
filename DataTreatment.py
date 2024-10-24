@@ -11,7 +11,7 @@ def fix_yearweek(date_string):
     year, week =  map(lambda x: int(x), date_string.split('-'))
     fixed = "{0}-{1:02d}".format(year, week)
     
-    assert re.match("\d{4}-\d{2}$", fixed)
+    assert re.match(r"\d{4}-\d{2}$", fixed)
     return fixed
 
 def weekMinus(week, minusweek):
