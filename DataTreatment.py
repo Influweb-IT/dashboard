@@ -567,5 +567,6 @@ reg_map = reg_map[['DEN_REG','count','geometry']].set_index('DEN_REG')
 ar = ((data_ILI[data_ILI.ILI==True].reg.value_counts().reset_index().set_index('reg')/partecipanti_reg).reindex(list(regioni.index)).fillna(0)*100)
 ar = ar.reset_index().set_index('reg').rename(columns={'count':'ar'})
 
-reg_map_ar = reg_map.join(ar,how='left').reset_index()
+
+reg_map_ar = reg_map.join(ar,how='left').reindex(list(regioni.index)).fillna(0).reset_index()
 reg_map_ar.to_csv(os.path.join(output_dir, 'reg_map.csv'), index=False)
