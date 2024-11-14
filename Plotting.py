@@ -113,7 +113,7 @@ def _demographic_composition_plot():
     ax3[1,1].set_xlabel('')
     ax3[1,1].spines[['right', 'top']].set_visible(False)
 
-    fig3.text(0.0, 0.6, _('Number of participants in the 2023-2024 season'), va='center', rotation='vertical')
+    fig3.text(0.0, 0.6, _('Number of participants in the current season'), va='center', rotation='vertical')
 
     plt.tight_layout()
     st.pyplot(fig3)
@@ -122,7 +122,7 @@ def _geo_plot():
 
     st.title(_('Geographic aspects'))
 
-    st.write(_("The first map shows the cumulative incidence in the 2023-2024 season of probable cases of influenza-like illness (ILI) reported in each region by Influweb participants."),
+    st.write(_("The first map shows the cumulative incidence in the current season of probable cases of influenza-like illness (ILI) reported in each region by Influweb participants."),
              _('The second map shows the regional coverage of participants in each region expressed as the number of participants per 100,000 inhabitants.'))
 
 
@@ -140,14 +140,14 @@ def _geo_plot():
     with tab4:
         fig4, ax4 = plt.subplots(figsize=(6,6))
         gdf.plot(ax=ax4, cmap='Blues', column='ar', legend=True, edgecolor="w", linewidth=.3,
-                     legend_kwds={"label":  _('Attack rate per 100,000 inhabitants in the 2023-2024 season'), "orientation": "vertical","shrink":0.6})
+                     legend_kwds={"label":  _('Attack rate per 100,000 inhabitants in the current season'), "orientation": "vertical","shrink":0.6})
         ax4.axis('off')
         st.pyplot(fig4)
 
     with tab5:
         fig5, ax5 = plt.subplots(figsize=(6,6))
         gdf.plot(ax=ax5, cmap='Reds', column='count', legend=True, edgecolor="w", linewidth=.3,
-                     legend_kwds={"label": _('Participants per 100,000 inhabitants in the 2023-2024 season'), "orientation": "vertical","shrink":0.6})
+                     legend_kwds={"label": _('Participants per 100,000 inhabitants in the current season'), "orientation": "vertical","shrink":0.6})
         ax5.axis('off')
         st.pyplot(fig5)
 
