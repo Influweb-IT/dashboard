@@ -209,6 +209,34 @@ def change_regname(x):
         return "Valle d'Aosta"
     else: return x
 
+
+def get_province(postal_code):
+    postal_code = int(postal_code)
+    if 1000 <= postal_code <= 1299:
+        return 'Bruxelles'
+    elif 1300 <= postal_code <= 1499:
+        return 'Brabant wallon'
+    elif (1500 <= postal_code <= 1999) or (3000 <= postal_code <= 3499):
+        return 'Vlaams-Brabant'
+    elif 2000 <= postal_code <= 2999:
+        return 'Antwerpen'
+    elif 3500 <= postal_code <= 3999:
+        return 'Limburg'
+    elif 4000 <= postal_code <= 4999:
+        return 'Liège'
+    elif 5000 <= postal_code <= 5999:
+        return 'Namur'
+    elif (6000 <= postal_code <= 6599) or (7000 <= postal_code <= 7999):
+        return 'Hainaut'
+    elif 6600 <= postal_code <= 6999:
+        return 'Luxembourg'
+    elif 8000 <= postal_code <= 8999:   
+        return 'West-Vlaanderen'
+    elif 9000 <= postal_code <= 9999:
+        return 'Oost-Vlaanderen'
+    else:
+        return 'Unknown'
+
 YEAR_MIN, YEAR_MAX = 2023, 2024
 
 dates = datetime.date.today()
