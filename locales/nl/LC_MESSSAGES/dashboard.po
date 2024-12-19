@@ -60,7 +60,7 @@ msgid "Female"
 msgstr "Vrouw"
 
 msgid "Other"
-msgstr "Ander"
+msgstr "Andere"
 
 msgid "Full time"
 msgstr "Voltijds"
@@ -96,7 +96,7 @@ msgid "Bachelor"
 msgstr "Bachelor"
 
 msgid "Intermediate school"
-msgstr "Middelbare school"
+msgstr "Basisschool"
 
 msgid "None"
 msgstr "Geen"
