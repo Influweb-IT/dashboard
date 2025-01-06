@@ -211,7 +211,7 @@ def get_province(postal_code):
     if 1000 <= postal_code <= 1299:
         return 'Bruxelles'
     elif 1300 <= postal_code <= 1499:
-        return 'Brabant wallon'
+        return 'Brabant Wallon'
     elif (1500 <= postal_code <= 1999) or (3000 <= postal_code <= 3499):
         return 'Vlaams-Brabant'
     elif 2000 <= postal_code <= 2999:
@@ -383,233 +383,248 @@ intake = intake_complete[["participantID","age_class","gender","reg","edu","occu
 # intermediary save to check
 # intake.to_csv('./data/output/intake-clean.csv', index=False)
 
-#path = './data/raw/weekly/'
-#os.makedirs(path, exist_ok=True)
-#
-#dfs = []
-#
-#for filename in glob.glob(path+'*.csv'):
-#    with open(os.path.join(os.getcwd(), filename), 'r') as f: # open in readonly mode
-#        # do your stuff
-#        dfs.append(pd.read_csv(f))
-#
-#weekly_complete = pd.concat(dfs)
-#
-#
-#############
-### WEEKLY ##
-#############
-#
-#def transf_date(x):
-#    if pd.notnull(x):
-#        newx = pd.to_datetime(int(x),unit='s')
-#        return newx
-#    else:
-#        return ''
-#    
-#weekly_complete['weekly.HS.Q3.0'] = weekly_complete['weekly.HS.Q3.0'].apply(lambda d: transf_date(d))
-#weekly_complete['weekly.HS.Q4.0'] = weekly_complete['weekly.HS.Q4.0'].apply(lambda d: transf_date(d))
-#weekly_complete['weekly.HS.Q6.1'] = weekly_complete['weekly.HS.Q6.1'].apply(lambda d: transf_date(d))
-#
-#weekly_complete['timestamp'] = weekly_complete.submitted.apply(lambda d: pd.to_datetime(int(d),unit='s', errors = 'coerce'))
-#weekly_complete.timestamp = pd.to_datetime(weekly_complete.timestamp, utc=True).apply(lambda d: d.strftime('%Y-%m-%d %H:%M:%S'))
-#weekly_complete = weekly_complete.sort_values("timestamp", ascending=True)
-#weekly_complete = weekly_complete[weekly_complete.timestamp <= dates.strftime('%Y-%m-%d %H:%M:%S')]
-#
-#
-#weekly_complete['weekly.HS.Q3.0'] = pd.to_datetime(weekly_complete['weekly.HS.Q3.0'], utc=True, errors='coerce').dt.strftime('%Y-%m-%d')
-#weekly_complete['weekly.HS.Q4.0'] = pd.to_datetime(weekly_complete['weekly.HS.Q4.0'], utc=True, errors='coerce').dt.strftime('%Y-%m-%d')
-#weekly_complete['weekly.HS.Q6.1'] = pd.to_datetime(weekly_complete['weekly.HS.Q6.1'], utc=True, errors='coerce').dt.strftime('%Y-%m-%d')
-#
-#weekly_complete['Sudden onset']= weekly_complete['weekly.HS.Q5'].apply(lambda x: True if x==0 else False)
-#weekly_complete['Sudden fever']= weekly_complete['weekly.HS.Q6b'].apply(lambda x: True if x==0 else False)
-#
-##homogenize true and false
-##weekly_complete[weekly_complete.filter(regex='(^Q[1,7,8,9]+_+[0-9]+$)',axis=1).columns] = weekly_complete[weekly_complete.filter(regex='(^Q[1,7,8,9]+_+[0-9]+$)',axis=1).columns].isin(["True", "t",True])
-#weekly_complete[['Q1_0','Fever','Chills','Runny or blocked nose','Sneezing','Sore throat','Cough','Shortness of breath','Headache',
-#                 'Muscle/joint pain','Chest pain','Malaise','Loss of appetite','Coloured sputum','Watery, bloodshot eyes'
-#                 ,'Nausea','Vomiting','Diarrhoea','Stomach ache','Other','Rash','Loss of taste', 'Nose bleed', 'Loss of smell']]= weekly_complete[['weekly.Q1.0',
-#'weekly.Q1.1','weekly.Q1.2','weekly.Q1.3','weekly.Q1.4','weekly.Q1.5','weekly.Q1.6','weekly.Q1.7','weekly.Q1.8',
-#'weekly.Q1.9','weekly.Q1.10', 'weekly.Q1.11', 'weekly.Q1.12','weekly.Q1.13', 'weekly.Q1.14','weekly.Q1.15','weekly.Q1.16',
-#'weekly.Q1.17','weekly.Q1.18','weekly.Q1.19','weekly.Q1.20','weekly.Q1.21','weekly.Q1.22','weekly.Q1.23']].map(lambda x: translate(x))
-#
-## some cleaning:
-## remove surveys with no global_id, if any, and consider only surveys which have a corresponding intake survey
-#weekly_complete = weekly_complete[pd.isnull(weekly_complete.participantID)==False]
-#weekly_complete = weekly_complete[weekly_complete.participantID.isin(intake.participantID.unique())]
-#
-## add cols
-#weekly_complete.rename(columns={'timestamp': 'weekly_timestamp'}, inplace=True)
-#weekly_complete.insert(3, "submission_date", weekly_complete.weekly_timestamp.str.split().str[0])
-#weekly_complete.insert(4, "submission_week", weekly_complete.submission_date.map(date_week))
-#weekly_complete.insert(5, "season", weekly_complete.submission_date.map(date_season))
-#
-##keep only current season
-#weekly_complete = weekly_complete[weekly_complete.season =='2023-2024']
-#
-## remove duplicates within the same week, keeping the last one
-#weekly = weekly_complete.drop_duplicates(['participantID','submission_week'], keep='last', inplace=False)
-#
-#
-######################
-### WEEKLY + INTAKE ##
-######################
-## Merge weekly and intake according to the most recent intake per each weekly_survey submitted
-#frames = []
-#for item, group in weekly.groupby(["participantID","weekly_timestamp","submission_date"]):
-#    participantID, weekly_timestamp, submission_date = item
-#    intake_timestamp = intake[(intake.participantID==participantID) & (intake.intake_timestamp<=weekly_timestamp)].intake_timestamp.max()
-#    frames.append({'participantID': participantID, 'submission_date':submission_date, 'intake_timestamp':intake_timestamp})
-#data = weekly.merge(pd.DataFrame(frames), on=["participantID", "submission_date"], how="left")
-#data = data.merge(intake, on=["participantID", "intake_timestamp"], how="left")
-#assert(data.shape[0]==weekly.shape[0])
-#
-#
-#all_weeks = sorted(set(data.submission_week.dropna().values)) #all weeks in the period
-#real_weeks = sorted(set(week_season.keys())) #only weeks in seasons
-#
-#data = data[~pd.isna(data.season)]
-#
-#
-## ACTIVE USERS (in real-time):
-## - AT LEAST 2 symptoms surveys
-## - WINDOW OF PARTICIPATION: +/- 2 WEEKS AROUND THE WEEK OF REPORTING
-#
-## keep only surveys of participants who submitted >= 2 symptoms surveys
-#data = data.groupby('participantID').filter(lambda x: len(x)>1)
-#if data.empty:
-#    sys.exit('### no active users ###\n')
-#
-#
-## get num. of active users per week
-#weekly_active_user = {}
-#for participantID, group in data.groupby('participantID'):
-#    activity_weeks = get_week_of_activity(participantID, group.submission_week)
-#    for wk in activity_weeks:
-#        weekly_active_user.setdefault(wk, 0)
-#        weekly_active_user[wk] += 1
-#        
-#wau = pd.Series(weekly_active_user).reindex(real_weeks).sort_index()
-#
-#all_dates = sorted(pd.Series(date_week.keys()))
-#all_symptoms = ['Fever','Chills','Runny or blocked nose','Sneezing','Sore throat','Cough','Shortness of breath','Headache',
-#                 'Muscle/joint pain','Chest pain','Malaise','Loss of appetite','Coloured sputum','Watery, bloodshot eyes'
-#                 ,'Nausea','Vomiting','Diarrhoea','Stomach ache','Other','Rash','Loss of taste', 'Nose bleed', 'Loss of smell','Sudden onset','Sudden fever']
-#
-#all_weeks_tf = [yearweek_to_ts(x) for x in all_weeks]
-#real_weeks_tf= [yearweek_to_ts(x) for x in real_weeks]
-#
-#
-#data_ILI = data.copy(deep=True)
-#data_ILI = data_ILI[ data_ILI.season.isin(seasons) ] #get only weeks in seasons
-#
-#ILI_weeks=set(data_ILI.submission_week)
-#submission_weeks=[x for x in list(week_season.keys()) if x<='2024-18'] #ILI_weeks
-#
-#data_ILI['symptoms'] = data_ILI['weekly.Q1.0'].apply(lambda x: False if x==True else True)
-#
+path = './data/raw/weekly/'
+os.makedirs(path, exist_ok=True)
+
+dfs = []
+
+for filename in glob.glob(path+'*.csv'):
+    with open(os.path.join(os.getcwd(), filename), 'r') as f: # open in readonly mode
+        # do your stuff
+        dfs.append(pd.read_csv(f))
+
+weekly_complete = pd.concat(dfs)
+
+
+############
+## WEEKLY ##
+############
+
+def transf_date(x):
+    if str(x) == 'False' or str(x) == 'True':
+        # print('Transform date warning: boolean input')
+        return ''
+    if pd.notnull(x):
+        newx = pd.to_datetime(int(x),unit='s')
+        return newx
+    else:
+        return ''
+    
+weekly_complete['weekly.HS.Q3.0'] = weekly_complete['weekly.HS.Q3-rg.0'].apply(lambda d: transf_date(d))
+weekly_complete['weekly.HS.Q4.0'] = weekly_complete['weekly.HS.Q4-rg.scg.0'].apply(lambda d: transf_date(d))
+weekly_complete['weekly.HS.Q6.1'] = weekly_complete['weekly.HS.Q6.a-rg.scg.1'].apply(lambda d: transf_date(d))
+
+weekly_complete['timestamp'] = weekly_complete.submittedAt.apply(lambda d: pd.to_datetime(int(d),unit='s', errors = 'coerce'))
+weekly_complete.timestamp = pd.to_datetime(weekly_complete.timestamp, utc=True).apply(lambda d: d.strftime('%Y-%m-%d %H:%M:%S'))
+weekly_complete = weekly_complete.sort_values("timestamp", ascending=True)
+weekly_complete = weekly_complete[weekly_complete.timestamp <= dates.strftime('%Y-%m-%d %H:%M:%S')]
+
+
+weekly_complete['weekly.HS.Q3.0'] = pd.to_datetime(weekly_complete['weekly.HS.Q3.0'], utc=True, errors='coerce').dt.strftime('%Y-%m-%d')
+weekly_complete['weekly.HS.Q4.0'] = pd.to_datetime(weekly_complete['weekly.HS.Q4.0'], utc=True, errors='coerce').dt.strftime('%Y-%m-%d')
+weekly_complete['weekly.HS.Q6.1'] = pd.to_datetime(weekly_complete['weekly.HS.Q6.1'], utc=True, errors='coerce').dt.strftime('%Y-%m-%d')
+
+weekly_complete['Sudden onset']= weekly_complete['weekly.HS.Q5-rg.scg.0'].apply(lambda x: True if x==0 else False)
+weekly_complete['Sudden fever']= weekly_complete['weekly.HS.Q6.b-rg.scg.1'].apply(lambda x: True if x==0 else False)
+
+#homogenize true and false
+#weekly_complete[weekly_complete.filter(regex='(^Q[1,7,8,9]+_+[0-9]+$)',axis=1).columns] = weekly_complete[weekly_complete.filter(regex='(^Q[1,7,8,9]+_+[0-9]+$)',axis=1).columns].isin(["True", "t",True])
+weekly_complete[['Q1_0','Fever','Chills','Runny or blocked nose','Sneezing','Sore throat','Cough','Shortness of breath','Headache',
+                 'Muscle/joint pain','Chest pain','Malaise','Loss of appetite','Coloured sputum','Watery, bloodshot eyes'
+                 ,'Nausea','Vomiting','Diarrhoea','Stomach ache','Other','Rash','Loss of taste', 'Nose bleed', 'Loss of smell', 'Confusion']]= weekly_complete[['weekly.Q_BE_1-rg.mcg.0',
+'weekly.Q_BE_1-rg.mcg.1','weekly.Q_BE_1-rg.mcg.2','weekly.Q_BE_1-rg.mcg.3','weekly.Q_BE_1-rg.mcg.4','weekly.Q_BE_1-rg.mcg.5','weekly.Q_BE_1-rg.mcg.6','weekly.Q_BE_1-rg.mcg.7','weekly.Q_BE_1-rg.mcg.8',
+'weekly.Q_BE_1-rg.mcg.9','weekly.Q_BE_1-rg.mcg.10', 'weekly.Q_BE_1-rg.mcg.11', 'weekly.Q_BE_1-rg.mcg.12','weekly.Q_BE_1-rg.mcg.13', 'weekly.Q_BE_1-rg.mcg.14','weekly.Q_BE_1-rg.mcg.15','weekly.Q_BE_1-rg.mcg.16',
+'weekly.Q_BE_1-rg.mcg.17','weekly.Q_BE_1-rg.mcg.18','weekly.Q_BE_1-rg.mcg.19','weekly.Q_BE_1-rg.mcg.20','weekly.Q_BE_1-rg.mcg.21','weekly.Q_BE_1-rg.mcg.22','weekly.Q_BE_1-rg.mcg.23', 'weekly.Q_BE_1-rg.mcg.24']].map(lambda x: translate(x))
+
+# some cleaning:
+# remove surveys with no global_id, if any, and consider only surveys which have a corresponding intake survey
+weekly_complete = weekly_complete[pd.isnull(weekly_complete.participantID)==False]
+weekly_complete = weekly_complete[weekly_complete.participantID.isin(intake.participantID.unique())]
+
+# add cols
+weekly_complete.rename(columns={'timestamp': 'weekly_timestamp'}, inplace=True)
+weekly_complete.insert(3, "submission_date", weekly_complete.weekly_timestamp.str.split().str[0])
+weekly_complete.insert(4, "submission_week", weekly_complete.submission_date.map(date_week))
+weekly_complete.insert(5, "season", weekly_complete.submission_date.map(date_season))
+
+#keep only current season
+weekly_complete = weekly_complete[weekly_complete.season =='2023-2024']
+
+# remove duplicates within the same week, keeping the last one
+weekly = weekly_complete.drop_duplicates(['participantID','submission_week'], keep='last', inplace=False)
+
+
+# keep only the following columns
+columns_to_keep_weekly = ['participantID', 'weekly_timestamp', 'submission_date', 'submission_week', 'season', 
+                          'weekly.HS.Q3.0', 'weekly.HS.Q4.0', 'weekly.HS.Q6.1', 'Sudden onset', 'Sudden fever',
+                          'Q1_0','Fever','Chills','Runny or blocked nose','Sneezing','Sore throat','Cough','Shortness of breath','Headache',
+                          'Muscle/joint pain','Chest pain','Malaise','Loss of appetite','Coloured sputum','Watery, bloodshot eyes',
+                          'Nausea','Vomiting','Diarrhoea','Stomach ache','Other','Rash','Loss of taste', 'Nose bleed', 'Loss of smell', 'Confusion']
+
+weekly = weekly[columns_to_keep_weekly]
+
+# intermediary save to check
+# weekly.to_csv('./data/output/weekly-clean.csv', index=False)
+
 #####################
-### Merge episodes ##
+## WEEKLY + INTAKE ##
 #####################
-#
-## define first_survey ever for each user
-#data_ILI['first_survey'] = data_ILI.groupby(['participantID'])['submission_week'].transform('min')
-#
-#data_ILI['ILI'] = data_ILI.apply(lambda row: get_ILI_ECDC(row), axis=1)
-#data_ILI['ARI'] = data_ILI.apply(lambda row: get_ARI(row), axis=1)
-#
-##define onset week based on reported onset or reported fever onset for ILI and ARI only
-#data_ILI['onset_week'] = data_ILI.apply(lambda row: get_onset_date(row.submission_date, row['weekly.HS.Q3.0'], row['weekly.HS.Q6.1']) if any([row['ILI']==True,row['ARI']==True]) else np.nan, axis=1).map(date_week) # only if ILI or ARI
-#
-###############################
-### Remove first submissions ##
-###############################
-#
-##correction for first submitted ILI survey ever
-#data_ILI.loc[(data_ILI['ILI']==True) & (data_ILI['submission_week']==data_ILI['first_survey']), 'ILI']= False
-##correction for first submitted ARI survey ever
-#data_ILI.loc[(data_ILI['ARI']==True) & (data_ILI['submission_week']==data_ILI['first_survey']), 'ARI']= False
-#
-#
-#####################
-### Merge episodes ##
-#####################
-#
-#data_ILI = data_ILI.drop_duplicates(['participantID','onset_week'], keep='last')
-#
-#
-#weekly_ARI = {'onset_week':0.0}
-#if data_ILI[(data_ILI['ARI']==True)].shape[0]>0:
-#    weekly_ARI = data_ILI[(data_ILI.ARI==True)].groupby('onset_week').size().to_dict()
-#season_ARI = data_ILI[(data_ILI.ARI==True)].groupby('season').size()
-#
-#active, ARI = 0, 0
-#incidence_ARI = {}
-#
-#act_threshold=100
-#rescaling=1000
-#for week in sorted(submission_weeks):
-#    if week in weekly_ARI:
-#        active = weekly_active_user[week]
-#        ARI = weekly_ARI[week]
-#    else: ARI = 0
-#    if active>act_threshold and ARI>0:
-#        incidence_ARI[week] = round( ARI*1.0/active*rescaling, 2 )
-#    else: incidence_ARI[week] = 0
-#
-#weekly_ILI = {'onset_week':0.0}
-#
-#if data_ILI[(data_ILI['ILI']==True)].shape[0]>0:
-#    weekly_ILI = data_ILI[(data_ILI.ILI==True)].groupby('onset_week').size().to_dict()
-#    
-#active, ILI = 0, 0
-#incidence = {}
-#act_threshold = 100
-#
-#for week in sorted(submission_weeks):
-#    active, ILI = 0, 0
-#    if week in weekly_ILI:
-#        active = weekly_active_user[week]
-#        ILI = weekly_ILI[week]
-#    else: ILI = 0
-#    if active>act_threshold and ILI>0:
-#        incidence[week] = round( ILI*1.0/active*rescaling, 2 )
-#    else: incidence[week] = 0
-#
-#output_dir = './data/dashboard/'
-#os.makedirs(output_dir, exist_ok=True)
-#
-##save epi values
-#pd.Series(incidence).to_frame('incidence').to_csv(os.path.join(output_dir, 'ILI_incidence.csv'), header=True)
-#pd.Series(incidence_ARI).to_frame('incidence').to_csv(os.path.join(output_dir, 'ARI_incidence.csv'), header=True)
-#pd.Series(wau).to_frame('active users').to_csv(os.path.join(output_dir, 'active_users.csv'), header=True)
-#
-##save participants values
-#intake['gender'].value_counts().to_csv(os.path.join(output_dir, 'gender.csv'), header=True)
-#intake['edu'].value_counts().to_csv(os.path.join(output_dir, 'education.csv'), header=True)
-#intake['occupation'].value_counts().to_csv(os.path.join(output_dir, 'occupation.csv'), header=True)
-#intake['age_class'].value_counts().to_csv(os.path.join(output_dir, 'age.csv'), header=True)
-#
-#
-## ## Mappa
-#
-#pop_reg = pd.read_csv('pop_reg.csv',header=0, names=['regione','pop']).set_index('regione').squeeze()
-#
-#regioni = gpd.read_file('Limiti01012024_g-2/Reg01012024_g/Reg01012024_g_WGS84.shp')
-#regioni = regioni[['DEN_REG','geometry']].set_index('DEN_REG')
-#
-#partecipanti_reg = data_ILI.reg.value_counts().squeeze().reset_index().set_index('reg')
-#
-#part_reg = intake.reg.value_counts().squeeze()/pop_reg * 100000
-#part_reg = part_reg.reindex(list(regioni.index))
-#part_reg = part_reg.reset_index().set_index('index')
-#
-#reg_map = regioni.join(part_reg).reset_index().rename(columns={0:'count'})
-#reg_map = reg_map[['DEN_REG','count','geometry']].set_index('DEN_REG')
-#
-#ar = ((data_ILI[data_ILI.ILI==True].reg.value_counts().reset_index().set_index('reg')/partecipanti_reg).reindex(list(regioni.index)).fillna(0)*100)
-#ar = ar.reset_index().set_index('reg').rename(columns={'count':'ar'})
-#
-#
-#reg_map_ar = reg_map.join(ar,how='left').reindex(list(regioni.index)).fillna(0).reset_index()
-#reg_map_ar.to_csv(os.path.join(output_dir, 'reg_map.csv'), index=False)
+# Merge weekly and intake according to the most recent intake per each weekly_survey submitted
+frames = []
+for item, group in weekly.groupby(["participantID","weekly_timestamp","submission_date"]):
+    participantID, weekly_timestamp, submission_date = item
+    intake_timestamp = intake[(intake.participantID==participantID) & (intake.intake_timestamp<=weekly_timestamp)].intake_timestamp.max()
+    frames.append({'participantID': participantID, 'submission_date':submission_date, 'intake_timestamp':intake_timestamp})
+data = weekly.merge(pd.DataFrame(frames), on=["participantID", "submission_date"], how="left")
+data = data.merge(intake, on=["participantID", "intake_timestamp"], how="left")
+assert(data.shape[0]==weekly.shape[0])
+
+
+all_weeks = sorted(set(data.submission_week.dropna().values)) #all weeks in the period
+real_weeks = sorted(set(week_season.keys())) #only weeks in seasons
+
+data = data[~pd.isna(data.season)]
+
+
+# ACTIVE USERS (in real-time):
+# - AT LEAST 2 symptoms surveys
+# - WINDOW OF PARTICIPATION: +/- 2 WEEKS AROUND THE WEEK OF REPORTING
+
+# keep only surveys of participants who submitted >= 2 symptoms surveys
+data = data.groupby('participantID').filter(lambda x: len(x)>1)
+if data.empty:
+    sys.exit('### no active users ###\n')
+
+
+# get num. of active users per week
+weekly_active_user = {}
+for participantID, group in data.groupby('participantID'):
+    activity_weeks = get_week_of_activity(participantID, group.submission_week)
+    for wk in activity_weeks:
+        weekly_active_user.setdefault(wk, 0)
+        weekly_active_user[wk] += 1
+        
+wau = pd.Series(weekly_active_user).reindex(real_weeks).sort_index()
+
+all_dates = sorted(pd.Series(date_week.keys()))
+all_symptoms = ['Fever','Chills','Runny or blocked nose','Sneezing','Sore throat','Cough','Shortness of breath','Headache',
+                 'Muscle/joint pain','Chest pain','Malaise','Loss of appetite','Coloured sputum','Watery, bloodshot eyes'
+                 ,'Nausea','Vomiting','Diarrhoea','Stomach ache','Other','Rash','Loss of taste', 'Nose bleed', 'Loss of smell','Sudden onset','Sudden fever']
+
+all_weeks_tf = [yearweek_to_ts(x) for x in all_weeks]
+real_weeks_tf= [yearweek_to_ts(x) for x in real_weeks]
+
+
+data_ILI = data.copy(deep=True)
+data_ILI = data_ILI[ data_ILI.season.isin(seasons) ] #get only weeks in seasons
+
+ILI_weeks=set(data_ILI.submission_week)
+submission_weeks=[x for x in list(week_season.keys()) if x<='2024-18'] #ILI_weeks
+
+data_ILI['symptoms'] = data_ILI['Q1_0'].apply(lambda x: False if x==True else True)
+
+####################
+## Merge episodes ##
+####################
+
+# define first_survey ever for each user
+data_ILI['first_survey'] = data_ILI.groupby(['participantID'])['submission_week'].transform('min')
+
+data_ILI['ILI'] = data_ILI.apply(lambda row: get_ILI_ECDC(row), axis=1)
+data_ILI['ARI'] = data_ILI.apply(lambda row: get_ARI(row), axis=1)
+
+#define onset week based on reported onset or reported fever onset for ILI and ARI only
+data_ILI['onset_week'] = data_ILI.apply(lambda row: get_onset_date(row.submission_date, row['weekly.HS.Q3.0'], row['weekly.HS.Q6.1']) if any([row['ILI']==True,row['ARI']==True]) else np.nan, axis=1).map(date_week) # only if ILI or ARI
+
+##############################
+## Remove first submissions ##
+##############################
+
+#correction for first submitted ILI survey ever
+data_ILI.loc[(data_ILI['ILI']==True) & (data_ILI['submission_week']==data_ILI['first_survey']), 'ILI']= False
+#correction for first submitted ARI survey ever
+data_ILI.loc[(data_ILI['ARI']==True) & (data_ILI['submission_week']==data_ILI['first_survey']), 'ARI']= False
+
+
+####################
+## Merge episodes ##
+####################
+
+data_ILI = data_ILI.drop_duplicates(['participantID','onset_week'], keep='last')
+
+
+weekly_ARI = {'onset_week':0.0}
+if data_ILI[(data_ILI['ARI']==True)].shape[0]>0:
+    weekly_ARI = data_ILI[(data_ILI.ARI==True)].groupby('onset_week').size().to_dict()
+season_ARI = data_ILI[(data_ILI.ARI==True)].groupby('season').size()
+
+active, ARI = 0, 0
+incidence_ARI = {}
+
+act_threshold=100
+rescaling=1000
+for week in sorted(submission_weeks):
+    if week in weekly_ARI:
+        active = weekly_active_user[week]
+        ARI = weekly_ARI[week]
+    else: ARI = 0
+    if active>act_threshold and ARI>0:
+        incidence_ARI[week] = round( ARI*1.0/active*rescaling, 2 )
+    else: incidence_ARI[week] = 0
+
+weekly_ILI = {'onset_week':0.0}
+
+if data_ILI[(data_ILI['ILI']==True)].shape[0]>0:
+    weekly_ILI = data_ILI[(data_ILI.ILI==True)].groupby('onset_week').size().to_dict()
+    
+active, ILI = 0, 0
+incidence = {}
+act_threshold = 100
+
+for week in sorted(submission_weeks):
+    active, ILI = 0, 0
+    if week in weekly_ILI:
+        active = weekly_active_user[week]
+        ILI = weekly_ILI[week]
+    else: ILI = 0
+    if active>act_threshold and ILI>0:
+        incidence[week] = round( ILI*1.0/active*rescaling, 2 )
+    else: incidence[week] = 0
+
+output_dir = './data/dashboard/'
+os.makedirs(output_dir, exist_ok=True)
+
+## Save epi values
+pd.Series(incidence).to_frame('incidence').to_csv(os.path.join(output_dir, 'ILI_incidence.csv'), header=True)
+pd.Series(incidence_ARI).to_frame('incidence').to_csv(os.path.join(output_dir, 'ARI_incidence.csv'), header=True)
+pd.Series(wau).to_frame('active users').to_csv(os.path.join(output_dir, 'active_users.csv'), header=True)
+
+#save participants values
+intake['gender'].value_counts().to_csv(os.path.join(output_dir, 'gender.csv'), header=True)
+intake['edu'].value_counts().to_csv(os.path.join(output_dir, 'education.csv'), header=True)
+intake['occupation'].value_counts().to_csv(os.path.join(output_dir, 'occupation.csv'), header=True)
+intake['age_class'].value_counts().to_csv(os.path.join(output_dir, 'age.csv'), header=True)
+
+
+## Map
+
+pop_reg = pd.read_csv('pop_reg.csv',header=0, names=['regione','pop']).set_index('regione').squeeze()
+
+region = gpd.read_file('shapefiles/belgium/belgium.shp')
+region = region[['NAME_2','geometry']].set_index('NAME_2')
+
+partecipanti_reg = data_ILI.reg.value_counts().squeeze().reset_index().set_index('reg')
+
+part_reg = intake.reg.value_counts().squeeze()/pop_reg * 100000
+part_reg = part_reg.reindex(list(region.index))
+part_reg = part_reg.reset_index().set_index('index')
+
+reg_map = region.join(part_reg).reset_index().rename(columns={0:'count'})
+reg_map = reg_map[['NAME_2','count','geometry']].set_index('NAME_2')
+
+ar = ((data_ILI[data_ILI.ILI==True].reg.value_counts().reset_index().set_index('reg')/partecipanti_reg).reindex(list(region.index)).fillna(0)*100)
+ar = ar.reset_index().set_index('reg').rename(columns={'count':'ar'})
+
+
+reg_map_ar = reg_map.join(ar,how='left').reindex(list(region.index)).fillna(0).reset_index()
+reg_map_ar.to_csv(os.path.join(output_dir, 'reg_map.csv'), index=False)
