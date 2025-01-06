@@ -1,3 +1,3 @@
 from Plotting import draw
 
-draw("it")
+draw("fr")

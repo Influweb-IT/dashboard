@@ -38,8 +38,8 @@ def _incidence_plot():
     wau = pd.read_csv(os.path.join(input_dir, 'active_users.csv'), index_col=0, header=0).squeeze()
 
     st.title(_('ILI incidence'))
-    st.write(_('In this section you can find updated data collected by Influweb regarding influenza symptoms.'),
-             _("The graph below shows the incidence curve of probable cases of influenza-like illness (ILI) and cases of acute respiratory syndrome (ARI) observed throughout Italy in the last year. The solid line represents an estimate of the incidence in the current week, the transparent area represents the 95% uncertainty of the estimate."))
+    st.write(_('In this section you can find updated data collected by Infectieradar regarding influenza symptoms.'),
+             _("The graph below shows the incidence curve of probable cases of influenza-like illness (ILI) and cases of acute respiratory syndrome (ARI) observed throughout Belgium in the last year. The solid line represents an estimate of the incidence in the current week, the transparent area represents the 95% uncertainty of the estimate."))
 
     #https://coolors.co/palette/ef476f-ffd166-06d6a0-118ab2-073b4c
 
@@ -122,7 +122,7 @@ def _geo_plot():
 
     st.title(_('Geographic aspects'))
 
-    st.write(_("The first map shows the cumulative incidence in the 2023-2024 season of probable cases of influenza-like illness (ILI) reported in each region by Influweb participants."),
+    st.write(_("The first map shows the cumulative incidence in the 2023-2024 season of probable cases of influenza-like illness (ILI) reported in each region by Infectieradar participants."),
              _('The second map shows the regional coverage of participants in each region expressed as the number of participants per 100,000 inhabitants.'))
 
 
@@ -139,7 +139,7 @@ def _geo_plot():
 
     with tab4:
         fig4, ax4 = plt.subplots(figsize=(6,6))
-        gdf.plot(ax=ax4, cmap='Blues', column='ar', legend=True, edgecolor="w", linewidth=.3,
+        gdf.plot(ax=ax4, cmap='Oranges', column='ar', legend=True, edgecolor="w", linewidth=.3,
                      legend_kwds={"label":  _('Attack rate per 100,000 inhabitants in the 2023-2024 season'), "orientation": "vertical","shrink":0.6})
         ax4.axis('off')
         st.pyplot(fig4)

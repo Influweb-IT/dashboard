@@ -1,0 +1,159 @@
+# French translations for PACKAGE package.
+# Copyright (C) 2024 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Infectieradar <infectiradar@uhasselt.be>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-11-04 16:42+0100\n"
+"PO-Revision-Date: 2024-12-16 10:02+0100\n"
+"Last-Translator: Infectieradar <infectieradar@uhasselt.be>\n"
+"Language-Team: French\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "ILI incidence"
+msgstr "Incidence du syndrome grippal"
+
+msgid ""
+"In this section you can find updated data collected by Infectieradar "
+"regarding influenza symptoms."
+msgstr "Dans cette section, vous pouvez trouver des données mises à jour collectées par Infectieradar "
+"concernant les symptômes de la grippe."
+
+#, python-format
+msgid ""
+"The graph below shows the incidence curve of probable cases of influenza-"
+"like illness (ILI) and cases of acute respiratory syndrome (ARI) observed "
+"throughout Belgium in the last year. The solid line represents an estimate "
+"of the incidence in the current week, the transparent area represents the "
+"95% uncertainty of the estimate."
+msgstr "Le graphique ci-dessous montre la courbe d'incidence des cas probables de syndrome grippal (SG) "
+"et des cas de syndrome respiratoire aigu (IRA) observés "
+"dans toute la Belgique au cours de la dernière année. La ligne continue représente une estimation "
+"de l'incidence au cours de la semaine en cours, la zone transparente représente "
+"l'incertitude de 95 % de l'estimation."
+
+msgid "ILI"
+msgstr "ILI"
+
+msgid "ARI"
+msgstr "ARI"
+
+msgid "incidence (‰)"
+msgstr "incidence (‰)"
+
+msgid "onset week"
+msgstr "semaine de début"
+
+msgid "Male"
+msgstr "Mâle"
+
+msgid "Female"
+msgstr "Femelle"
+
+msgid "Other"
+msgstr "Autre"
+
+msgid "Full time"
+msgstr "Temps plein"
+
+msgid "Retired"
+msgstr "Retraité"
+
+msgid "Self-employed"
+msgstr "Indépendants"
+
+msgid "Student"
+msgstr "Étudiant"
+
+msgid "Part-time"
+msgstr "Temps partiel"
+
+msgid "Homemaker"
+msgstr "Femme au foyer"
+
+msgid "Unemployed"
+msgstr "Chômeurs"
+
+msgid "On leave"
+msgstr "En congé"
+
+msgid "Master or PhD"
+msgstr "Master ou doctorat"
+
+msgid "High school"
+msgstr "Lycée"
+
+msgid "Bachelor"
+msgstr "Bachelor"
+
+msgid "Intermediate school"
+msgstr "École intermédiaire"
+
+msgid "None"
+msgstr "Aucun"
+
+msgid "Demographic composition of participants"
+msgstr "Composition démographique des participants"
+
+msgid ""
+"In this section we show the demographic characteristics of the participants "
+"in the current season."
+msgstr "Dans cette section, nous présentons les caractéristiques démographiques des participants "
+"à la saison actuelle."
+
+msgid ""
+"The graphs below show the demographic composition in terms of gender, age, "
+"education, and occupation."
+msgstr "Les graphiques ci-dessous montrent la composition démographique en termes de sexe, d'âge, "
+"d'éducation et de profession."
+
+msgid "Gender"
+msgstr "Sexe"
+
+msgid "Age"
+msgstr "Âge"
+
+msgid "Education"
+msgstr "Éducation"
+
+msgid "Occupation"
+msgstr "Occupation"
+
+msgid "Number of participants in the 2023-2024 season"
+msgstr "Nombre de participants à la saison 2023-2024"
+
+msgid "Geographic aspects"
+msgstr "Aspects géographiques"
+
+msgid ""
+"The first map shows the cumulative incidence in the 2023-2024 season of "
+"probable cases of influenza-like illness (ILI) reported in each region by "
+"Infectieradar participants."
+msgstr "La première carte montre l'incidence cumulée au cours de la saison 2023-2024 des "
+"cas probables de syndrome grippal (SG) signalés dans chaque région par "
+"les participants d'Infectieradar."
+
+msgid ""
+"The second map shows the regional coverage of participants in each region "
+"expressed as the number of participants per 100,000 inhabitants."
+msgstr "La deuxième carte montre la couverture régionale des participants dans chaque région "
+"exprimée en nombre de participants pour 100 000 habitants."
+
+msgid "ILI attack rate"
+msgstr "ILI attack rate"
+
+msgid "Participants"
+msgstr "Participants"
+
+msgid "Attack rate per 100,000 inhabitants in the 2023-2024 season"
+msgstr "Attack rate pour 100 000 habitants au cours de la saison 2023-2024"
+
+msgid "Participants per 100,000 inhabitants in the 2023-2024 season"
+msgstr "Participants pour 100 000 habitants lors de la saison 2023-2024"
