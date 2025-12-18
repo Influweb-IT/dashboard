@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-04 16:42+0100\n"
+"POT-Creation-Date: 2025-12-18 14:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,33 +17,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "ILI incidence"
+msgid "95% CI"
 msgstr ""
 
-msgid ""
-"In this section you can find updated data collected by Influweb regarding "
-"influenza symptoms."
+msgid "Prevalence %"
 msgstr ""
 
-#, python-format
-msgid ""
-"The graph below shows the incidence curve of probable cases of influenza-"
-"like illness (ILI) and cases of acute respiratory syndrome (ARI) observed "
-"throughout Italy in the last year. The solid line represents an estimate of "
-"the incidence in the current week, the transparent area represents the "
-"95% uncertainty of the estimate."
-msgstr ""
-
-msgid "ILI"
-msgstr ""
-
-msgid "ARI"
-msgstr ""
-
-msgid "incidence (‰)"
-msgstr ""
-
-msgid "onset week"
+msgid "Onset week"
 msgstr ""
 
 msgid "Male"
@@ -94,17 +74,88 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-msgid "Demographic composition of participants"
+msgid "Fever"
 msgstr ""
 
-msgid ""
-"In this section we show the demographic characteristics of the participants "
-"in the current season."
+msgid "Chills"
 msgstr ""
 
-msgid ""
-"The graphs below show the demographic composition in terms of gender, age, "
-"education, and occupation."
+msgid "Runny or blocked nose"
+msgstr ""
+
+msgid "Sneezing"
+msgstr ""
+
+msgid "Sore throat"
+msgstr ""
+
+msgid "Cough"
+msgstr ""
+
+msgid "Shortness of breath"
+msgstr ""
+
+msgid "Headache"
+msgstr ""
+
+msgid "Muscle/joint pain"
+msgstr ""
+
+msgid "Chest pain"
+msgstr ""
+
+msgid "Malaise"
+msgstr ""
+
+msgid "Loss of appetite"
+msgstr ""
+
+msgid "Coloured sputum"
+msgstr ""
+
+msgid "Watery, bloodshot eyes"
+msgstr ""
+
+msgid "Nausea"
+msgstr ""
+
+msgid "Vomiting"
+msgstr ""
+
+msgid "Diarrhoea"
+msgstr ""
+
+msgid "Stomach ache"
+msgstr ""
+
+msgid "Rash"
+msgstr ""
+
+msgid "Loss of taste"
+msgstr ""
+
+msgid "Nose bleed"
+msgstr ""
+
+msgid "Loss of smell"
+msgstr ""
+
+msgid "Sudden onset"
+msgstr ""
+
+msgid "Sudden fever"
+msgstr ""
+
+msgid "ILI"
+msgstr ""
+
+msgid "incidence (‰)"
+msgstr ""
+
+msgid "onset week"
+msgstr ""
+
+msgid "ARI"
 msgstr ""
 
 msgid "Gender"
@@ -119,16 +170,56 @@ msgstr ""
 msgid "Occupation"
 msgstr ""
 
-msgid "Number of participants in the 2023-2024 season"
+msgid "ILI attack rate"
+msgstr ""
+
+msgid "Attack rate per 100,000 inhabitants"
+msgstr ""
+
+msgid "Participants"
+msgstr ""
+
+msgid "Participants per 100,000 inhabitants"
+msgstr ""
+
+msgid "Symptoms"
+msgstr ""
+
+msgid "Prevalence (%)"
+msgstr ""
+
+msgid "ILI attack rate per 100,000 inhabitants"
+msgstr ""
+
+msgid "Syndromic incidence"
+msgstr ""
+
+msgid "Demographic composition"
 msgstr ""
 
 msgid "Geographic aspects"
 msgstr ""
 
+msgid "Symptoms of the week"
+msgstr ""
+
+#, python-format
 msgid ""
-"The first map shows the cumulative incidence in the 2023-2024 season of "
-"probable cases of influenza-like illness (ILI) reported in each region by "
-"Influweb participants."
+"The graph below shows the incidence curve of probable cases of influenza-"
+"like illness (ILI) and acute respiratory syndrome (ARI) observed throughout "
+"Italy in the current season. The solid line represents an estimate of the "
+"incidence in the current week, the shaded area represents the 95% confidence "
+"internval of the estimate."
+msgstr ""
+
+msgid ""
+"In this section we show the demographic composition in terms of gender, age, "
+"education, and occupation of participants in the current season"
+msgstr ""
+
+msgid ""
+"The first map shows the cumulative incidence in the current season of "
+"influenza-like illness (ILI) reported by participants in each region by"
 msgstr ""
 
 msgid ""
@@ -136,14 +227,7 @@ msgid ""
 "expressed as the number of participants per 100,000 inhabitants."
 msgstr ""
 
-msgid "ILI attack rate"
-msgstr ""
-
-msgid "Participants"
-msgstr ""
-
-msgid "Attack rate per 100,000 inhabitants in the 2023-2024 season"
-msgstr ""
-
-msgid "Participants per 100,000 inhabitants in the 2023-2024 season"
+msgid ""
+"The following chart shows the prevalence of specific symptoms among "
+"participants reporting any symptoms"
 msgstr ""

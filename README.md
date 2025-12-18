@@ -39,6 +39,10 @@ When changing `Plotting.py` source code by adding new strings to be translated, 
 
 `xgettext --no-location -o locales/dashboard.pot Plotting.py`
 
+Then compile the .mo file with this command, this is the file that the html will read
+
+msgfmt locales/<language_code>/LC_MESSAGES/dashboard.po -o locales/<language_code>/LC_MESSAGES/dashboard.mo
+
 After doing this you need to merge the newly generate .pot file with the existing translations
 
 `msgmerge -U locales/<language_code>/LC_MESSAGES/dashboard.po locales/dashboard.pot`

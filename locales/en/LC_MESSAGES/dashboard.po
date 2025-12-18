@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-04 16:42+0100\n"
+"POT-Creation-Date: 2025-12-18 14:36+0100\n"
 "PO-Revision-Date: 2024-11-04 17:01+0100\n"
 "Last-Translator: Influenzanet <influenzanet@isi.it>\n"
 "Language-Team: English\n"
@@ -17,41 +17,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "ILI incidence"
-msgstr "ILI incidence"
+msgid "95% CI"
+msgstr "95% CI"
 
-msgid ""
-"In this section you can find updated data collected by Influweb regarding "
-"influenza symptoms."
-msgstr ""
-"In this section you can find updated data collected by Influweb regarding "
-"influenza symptoms."
+msgid "Prevalence %"
+msgstr "Prevalence %"
 
-#, python-format
-msgid ""
-"The graph below shows the incidence curve of probable cases of influenza-"
-"like illness (ILI) and cases of acute respiratory syndrome (ARI) observed "
-"throughout Italy in the last year. The solid line represents an estimate of "
-"the incidence in the current week, the transparent area represents the "
-"95% uncertainty of the estimate."
-msgstr ""
-"The graph below shows the incidence curve of probable cases of influenza-"
-"like illness (ILI) and cases of acute respiratory syndrome (ARI) observed "
-"throughout Italy in the last year. The solid line represents an estimate of "
-"the incidence in the current week, the transparent area represents the "
-"95% uncertainty of the estimate."
-
-msgid "ILI"
-msgstr "ILI"
-
-msgid "ARI"
-msgstr "ARI"
-
-msgid "incidence (‰)"
-msgstr "incidence (‰)"
-
-msgid "onset week"
-msgstr "onset week"
+msgid "Onset week"
+msgstr "Onset week"
 
 msgid "Male"
 msgstr "Male"
@@ -101,22 +74,89 @@ msgstr "Intermediate school"
 msgid "None"
 msgstr "None"
 
-msgid "Demographic composition of participants"
-msgstr "Demographic composition of participants"
+msgid "Fever"
+msgstr "Fever"
 
-msgid ""
-"In this section we show the demographic characteristics of the participants "
-"in the current season."
-msgstr ""
-"In this section we show the demographic characteristics of the participants "
-"in the current season."
+msgid "Chills"
+msgstr "Chills"
 
-msgid ""
-"The graphs below show the demographic composition in terms of gender, age, "
-"education, and occupation."
-msgstr ""
-"The graphs below show the demographic composition in terms of gender, age, "
-"education, and occupation."
+msgid "Runny or blocked nose"
+msgstr "Runny or blocked nose"
+
+msgid "Sneezing"
+msgstr "Sneezing"
+
+msgid "Sore throat"
+msgstr "Sore throat"
+
+msgid "Cough"
+msgstr "Cough"
+
+msgid "Shortness of breath"
+msgstr "Shortness of breath"
+
+msgid "Headache"
+msgstr "Headache"
+
+msgid "Muscle/joint pain"
+msgstr "Muscle/joint pain"
+
+msgid "Chest pain"
+msgstr "Chest pain"
+
+msgid "Malaise"
+msgstr "Malaise"
+
+msgid "Loss of appetite"
+msgstr "Loss of appetite"
+
+msgid "Coloured sputum"
+msgstr "Coloured sputum"
+
+msgid "Watery, bloodshot eyes"
+msgstr "Watery, bloodshot eyes"
+
+msgid "Nausea"
+msgstr "Nausea"
+
+msgid "Vomiting"
+msgstr "Vomiting"
+
+msgid "Diarrhoea"
+msgstr "Diarrhoea"
+
+msgid "Stomach ache"
+msgstr "Stomach ache"
+
+msgid "Rash"
+msgstr "Rash"
+
+msgid "Loss of taste"
+msgstr "Loss of taste"
+
+msgid "Nose bleed"
+msgstr "Nose bleed"
+
+msgid "Loss of smell"
+msgstr "Loss of smell"
+
+msgid "Sudden onset"
+msgstr "Sudden onset"
+
+msgid "Sudden fever"
+msgstr "Sudden fever"
+
+msgid "ILI"
+msgstr "ILI"
+
+msgid "incidence (‰)"
+msgstr "incidence (‰)"
+
+msgid "onset week"
+msgstr "onset week"
+
+msgid "ARI"
+msgstr "ARI"
 
 msgid "Gender"
 msgstr "Gender"
@@ -130,36 +170,78 @@ msgstr "Education"
 msgid "Occupation"
 msgstr "Occupation"
 
-msgid "Number of participants in the 2023-2024 season"
-msgstr "Number of participants in the 2023-2024 season"
-
-msgid "Geographic aspects"
-msgstr "Geographic aspects"
-
-msgid ""
-"The first map shows the cumulative incidence in the 2023-2024 season of "
-"probable cases of influenza-like illness (ILI) reported in each region by "
-"Influweb participants."
-msgstr ""
-"The first map shows the cumulative incidence in the 2023-2024 season of "
-"probable cases of influenza-like illness (ILI) reported in each region by "
-"Influweb participants."
-
-msgid ""
-"The second map shows the regional coverage of participants in each region "
-"expressed as the number of participants per 100,000 inhabitants."
-msgstr ""
-"The second map shows the regional coverage of participants in each region "
-"expressed as the number of participants per 100,000 inhabitants."
-
 msgid "ILI attack rate"
 msgstr "ILI attack rate"
+
+msgid "Attack rate per 100,000 inhabitants"
+msgstr "Attack rate per 100,000 inhabitants"
 
 msgid "Participants"
 msgstr "Participants"
 
-msgid "Attack rate per 100,000 inhabitants in the 2023-2024 season"
-msgstr "Attack rate per 100,000 inhabitants in the 2023-2024 season"
+msgid "Participants per 100,000 inhabitants"
+msgstr "Participants per 100,000 inhabitants"
 
-msgid "Participants per 100,000 inhabitants in the 2023-2024 season"
-msgstr "Participants per 100,000 inhabitants in the 2023-2024 season"
+msgid "Symptoms"
+msgstr "Symptoms"
+
+msgid "Prevalence (%)"
+msgstr "Prevalence (%)"
+
+msgid "ILI attack rate per 100,000 inhabitants"
+msgstr "ILI attack rate per 100,000 inhabitants"
+
+msgid "Syndromic incidence"
+msgstr "Syndromic incidence"
+
+msgid "Demographic composition"
+msgstr "Demographic composition"
+
+msgid "Geographic aspects"
+msgstr "Geographic aspects"
+
+msgid "Symptoms of the week"
+msgstr "Symptoms of the week"
+
+#, python-format
+msgid ""
+"The graph below shows the incidence curve of probable cases of influenza-"
+"like illness (ILI) and acute respiratory syndrome (ARI) observed throughout "
+"Italy in the current season. The solid line represents an estimate of the "
+"incidence in the current week, the shaded area represents the 95% confidence "
+"internval of the estimate."
+msgstr ""
+"The graph below shows the incidence curve of probable cases of influenza-"
+"like illness (ILI) and acute respiratory syndrome (ARI) observed throughout "
+"Italy in the current season. The solid line represents an estimate of the "
+"incidence in the current week, the shaded area represents the 95% confidence "
+"internval of the estimate."
+
+msgid ""
+"In this section we show the demographic composition in terms of gender, age, "
+"education, and occupation of participants in the current season"
+msgstr ""
+"In this section we show the demographic composition in terms of gender, age, "
+"education, and occupation of participants in the current season"
+
+msgid ""
+"The first map shows the cumulative incidence in the current season of "
+"influenza-like illness (ILI) reported by participants in each region by"
+msgstr ""
+"The first map shows the cumulative incidence in the current season of "
+"influenza-like illness (ILI) reported by participants in each region by"
+
+msgid ""
+"The second map shows the regional coverage of participants in each region "
+"expressed as the number of participants per 100,000 inhabitants."
+msgstr ""
+"The second map shows the regional coverage of participants in each region "
+"expressed as the number of participants per 100,000 inhabitants."
+
+msgid ""
+"The following chart shows the prevalence of specific symptoms among "
+"participants reporting any symptoms"
+msgstr ""
+"The following chart shows the prevalence of specific symptoms among "
+"participants reporting any symptoms"
+

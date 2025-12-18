@@ -107,9 +107,12 @@ def bar_fig_symptoms(series, title, color, xaxis_label=""):
     # Round the values to 2 decimals
     rounded_values = series.round(2)
 
+    # Translate symptom names
+    translated_index = [_(symptom) for symptom in series.index]
+
     # Create a DataFrame for Plotly Express
     df = pd.DataFrame({
-        "": series.index,
+        "": translated_index,
         _("Prevalence %"): rounded_values
     })
 
@@ -120,7 +123,7 @@ def bar_fig_symptoms(series, title, color, xaxis_label=""):
         labels={"x": xaxis_label, "y": ""},
         title=title,
         orientation="h",
-        custom_data=[_("Prevalence %")]  # reference the column name for hover
+        hover_data=[_("Prevalence %")]
     )
 
     fig.update_traces(
@@ -134,8 +137,6 @@ def bar_fig_symptoms(series, title, color, xaxis_label=""):
     )
 
     return fig
-
-
 
 
 # -------------------------
@@ -428,7 +429,17 @@ def draw(language: str):
             )
 
     # ---- Assemble HTML (Plotly.js embedded once)
-    # ---- Assemble HTML
+
+    Title_incidence = _('Syndromic incidence')
+    Title_demo = _('Demographic composition')
+    Title_geo = _('Geographic aspects')
+    Title_symp = _('Symptoms of the week')
+    Text_incidence = _("The graph below shows the incidence curve of probable cases of influenza-like illness (ILI) and acute respiratory syndrome (ARI) observed throughout Italy in the current season. The solid line represents an estimate of the incidence in the current week, the shaded area represents the 95% confidence internval of the estimate.")
+    Text_demo = _("In this section we show the demographic composition in terms of gender, age, education, and occupation of participants in the current season")
+    Text_map1 = _("The first map shows the cumulative incidence in the current season of influenza-like illness (ILI) reported by participants in each region by")
+    Text_map2 = _("The second map shows the regional coverage of participants in each region expressed as the number of participants per 100,000 inhabitants.")
+    Text_symp = _("The following chart shows the prevalence of specific symptoms among participants reporting any symptoms")
+
     html = f"""
     <html>
     <head>
@@ -443,22 +454,28 @@ def draw(language: str):
     </head>
     <body>
 
-    <h1>{_('ILI incidence')}</h1>
+    <h1>{Title_incidence}</h1>
+    <p style="font-size:14px; "> {Text_incidence} </p>
     {ili_fig.to_html(full_html=False, include_plotlyjs="cdn")}
     {ari_fig.to_html(full_html=False, include_plotlyjs=False)}
 
-    <h1>{_('Demographic composition')}</h1>
+    <h1>{Title_demo}</h1>
+    <p style="font-size:14px; "> {Text_demo}</p>
     <div class="grid">
         {''.join(fig.to_html(full_html=False, include_plotlyjs=False) for fig in demo_figs)}
     </div>
 
-    <h1>{_('Geographic aspects')}</h1>
+    <h1>{Title_geo}</h1>
+    <p style="font-size:14px; "> {Text_map1}</p>
+    <p style="font-size:14px; "> {Text_map2}</p>
     <div class="map-grid">
         {geo_ili.to_html(full_html=False, include_plotlyjs=False)}
         {geo_part.to_html(full_html=False, include_plotlyjs=False)}
     </div>
 
-    <h1>{_('Symptoms of the week')}</h1>
+    <h1>{Title_symp}</h1>
+    <p style="font-size:14px; "> {Text_symp}</p>
+
     <div class="grid">
         {symptoms_fig.to_html(full_html=False, include_plotlyjs=False)}
     </div>

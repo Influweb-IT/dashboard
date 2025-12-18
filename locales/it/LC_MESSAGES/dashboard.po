@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-04 16:42+0100\n"
+"POT-Creation-Date: 2025-12-18 14:36+0100\n"
 "PO-Revision-Date: 2024-10-31 12:33+0100\n"
 "Last-Translator: Influenzanet <influenzanet@isi.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -18,39 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "ILI incidence"
-msgstr "Incidenza da sindromi simil-influenzali"
+msgid "95% CI"
+msgstr "95% CI"
 
-msgid ""
-"In this section you can find updated data collected by Influweb regarding "
-"influenza symptoms."
-msgstr ""
-"In questa sezione potete trovare i dati aggiornati raccolti da Influweb "
-"per quanto riguarda i sintomi influenzali"
+msgid "Prevalence %"
+msgstr "Prevalenza %"
 
-#, python-format
-msgid ""
-"The graph below shows the incidence curve of probable cases of influenza-"
-"like illness (ILI) and cases of acute respiratory syndrome (ARI) observed "
-"throughout Italy in the last year. The solid line represents an estimate of "
-"the incidence in the current week, the transparent area represents the "
-"95% uncertainty of the estimate."
-msgstr "Il grafico riportato qui sotto mostra la curva di incidenza dei probabili casi "
-"di sindrome simil-influenzale (ILI) e casi di sindrome respiratoria acuta (ARI) osservati "
-"in tutta Italia nell'ultimo anno. La curva continua rappresenta una stima dell'incidenza "
-"nella settimana corrente, l'area trasparente rappresenta l'incertezza del 95% sulla stima"
-
-msgid "ILI"
-msgstr "ILI"
-
-msgid "ARI"
-msgstr "ARI"
-
-msgid "incidence (‰)"
-msgstr "incidenza"
-
-msgid "onset week"
-msgstr "onset week"
+msgid "Onset week"
+msgstr "Settimana di insorgenza"
 
 msgid "Male"
 msgstr "Maschio"
@@ -68,25 +43,25 @@ msgid "Retired"
 msgstr "In pensione"
 
 msgid "Self-employed"
-msgstr "Autonomo"
+msgstr "Lavoratore autonomo"
 
 msgid "Student"
 msgstr "Studente"
 
 msgid "Part-time"
-msgstr "Part time"
+msgstr "Part-time"
 
 msgid "Homemaker"
-msgstr "Domestico"
+msgstr "Casalingo/a"
 
 msgid "Unemployed"
-msgstr "Disoccupato"
+msgstr "Disoccupato/a"
 
 msgid "On leave"
 msgstr "In congedo"
 
 msgid "Master or PhD"
-msgstr "Master o PhD"
+msgstr "Master o Dottorato"
 
 msgid "High school"
 msgstr "Scuola superiore"
@@ -98,20 +73,91 @@ msgid "Intermediate school"
 msgstr "Scuola media"
 
 msgid "None"
-msgstr "Altro"
+msgstr "Nessuno"
 
-msgid "Demographic composition of participants"
-msgstr "Composizione demografica dei partecipanti"
+msgid "Fever"
+msgstr "Febbre"
 
-msgid ""
-"In this section we show the demographic characteristics of the participants "
-"in the current season."
-msgstr "In questa sezione mostriamo le caratteristiche demografiche dei partecipanti nella stagione corrente"
+msgid "Chills"
+msgstr "Brividi"
 
-msgid ""
-"The graphs below show the demographic composition in terms of gender, age, "
-"education, and occupation."
-msgstr "I grafici riportati qui sotto mostrano la composizione demograficha in termini di genere, età, educazione e occupazione"
+msgid "Runny or blocked nose"
+msgstr "Naso che cola o chiuso"
+
+msgid "Sneezing"
+msgstr "Starnuti"
+
+msgid "Sore throat"
+msgstr "Mal di gola"
+
+msgid "Cough"
+msgstr "Tosse"
+
+msgid "Shortness of breath"
+msgstr "Fiato corto"
+
+msgid "Headache"
+msgstr "Mal di testa"
+
+msgid "Muscle/joint pain"
+msgstr "Dolori muscolari/articolari"
+
+msgid "Chest pain"
+msgstr "Dolore al petto"
+
+msgid "Malaise"
+msgstr "Malessere"
+
+msgid "Loss of appetite"
+msgstr "Perdita di appetito"
+
+msgid "Coloured sputum"
+msgstr "Sputo colorato"
+
+msgid "Watery, bloodshot eyes"
+msgstr "Occhi lacrimanti e arrossati"
+
+msgid "Nausea"
+msgstr "Nausea"
+
+msgid "Vomiting"
+msgstr "Vomito"
+
+msgid "Diarrhoea"
+msgstr "Diarrea"
+
+msgid "Stomach ache"
+msgstr "Mal di stomaco"
+
+msgid "Rash"
+msgstr "Eruzione cutanea"
+
+msgid "Loss of taste"
+msgstr "Perdita del gusto"
+
+msgid "Nose bleed"
+msgstr "Sangue dal nasale"
+
+msgid "Loss of smell"
+msgstr "Perdita dell’olfatto"
+
+msgid "Sudden onset"
+msgstr "Insorgenza improvvisa"
+
+msgid "Sudden fever"
+msgstr "Febbre improvvisa"
+
+msgid "ILI"
+msgstr "ILI"
+
+msgid "incidence (‰)"
+msgstr "Incidenza (‰)"
+
+msgid "onset week"
+msgstr "Settimana di insorgenza"
+
+msgid "ARI"
+msgstr "ARI"
 
 msgid "Gender"
 msgstr "Genere"
@@ -120,37 +166,82 @@ msgid "Age"
 msgstr "Età"
 
 msgid "Education"
-msgstr "Educazione"
+msgstr "Istruzione"
 
 msgid "Occupation"
 msgstr "Occupazione"
 
-msgid "Number of participants in the 2023-2024 season"
-msgstr "Numero partecipanti stagione 2023-2024"
-
-msgid "Geographic aspects"
-msgstr "Aspetti geografici"
-
-msgid ""
-"The first map shows the cumulative incidence in the 2023-2024 season of "
-"probable cases of influenza-like illness (ILI) reported in each region by "
-"Influweb participants."
-msgstr "La prima mappa mostra l'incidenza cumulativa nella stagione 2023-2024 dei "
-"probabili casi di sindrome simil-influenzale (ILI) riportati in ogni regione dai partecipanti di Influweb"
-
-msgid ""
-"The second map shows the regional coverage of participants in each region "
-"expressed as the number of participants per 100,000 inhabitants."
-msgstr "La seconda mappa mostra la copertura regionale dei partecipanti in ogni regione espressa come numero di partecipanti per 100,000 abitanti"
-
 msgid "ILI attack rate"
-msgstr "ILI attack rate"
+msgstr "Tasso di attacco ILI"
+
+msgid "Attack rate per 100,000 inhabitants"
+msgstr "Tasso di attacco per 100.000 abitanti"
 
 msgid "Participants"
 msgstr "Partecipanti"
 
-msgid "Attack rate per 100,000 inhabitants in the 2023-2024 season"
-msgstr "Attack rate per 100 abitanti stagione 2023-2024"
+msgid "Participants per 100,000 inhabitants"
+msgstr "Partecipanti per 100.000 abitanti"
 
-msgid "Participants per 100,000 inhabitants in the 2023-2024 season"
-msgstr "Partecipanti per 100,000 abitanti stagione 2023-2024"
+msgid "Symptoms"
+msgstr "Sintomi"
+
+msgid "Prevalence (%)"
+msgstr "Prevalenza (%)"
+
+msgid "ILI attack rate per 100,000 inhabitants"
+msgstr "Tasso di attacco ILI per 100.000 abitanti"
+
+msgid "Syndromic incidence"
+msgstr "Incidenza sindromica"
+
+msgid "Demographic composition"
+msgstr "Composizione demografica"
+
+msgid "Geographic aspects"
+msgstr "Aspetti geografici"
+
+msgid "Symptoms of the week"
+msgstr "Sintomi della settimana"
+
+#, python-format
+msgid ""
+"The graph below shows the incidence curve of probable cases of influenza-"
+"like illness (ILI) and acute respiratory syndrome (ARI) observed throughout "
+"Italy in the current season. The solid line represents an estimate of the "
+"incidence in the current week, the shaded area represents the 95% confidence "
+"internval of the estimate."
+msgstr ""
+"Il grafico sottostante mostra la curva di incidenza dei casi probabili di "
+"influenza (ILI) e sindrome respiratoria acuta (ARI) osservati in tutta "
+"l'Italia nella stagione corrente. La linea continua rappresenta una stima "
+"dell'incidenza nella settimana corrente, l'area ombreggiata rappresenta "
+"l'intervallo di confidenza al 95% della stima."
+
+msgid ""
+"In this section we show the demographic composition in terms of gender, age, "
+"education, and occupation of participants in the current season"
+msgstr ""
+"In questa sezione mostriamo la composizione demografica in termini di genere, "
+"età, istruzione e occupazione dei partecipanti nella stagione corrente."
+
+msgid ""
+"The first map shows the cumulative incidence in the current season of "
+"influenza-like illness (ILI) reported by participants in each region by"
+msgstr ""
+"La prima mappa mostra l'incidenza cumulativa nella stagione corrente di "
+"influenza (ILI) segnalata dai partecipanti in ciascuna regione."
+
+msgid ""
+"The second map shows the regional coverage of participants in each region "
+"expressed as the number of participants per 100,000 inhabitants."
+msgstr ""
+"La seconda mappa mostra la copertura regionale dei partecipanti in ciascuna "
+"regione, espressa come numero di partecipanti per 100.000 abitanti."
+
+msgid ""
+"The following chart shows the prevalence of specific symptoms among "
+"participants reporting any symptoms"
+msgstr ""
+"Il grafico seguente mostra la prevalenza di sintomi specifici tra i "
+"partecipanti che riportano sintomi."
