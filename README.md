@@ -41,7 +41,7 @@ When changing `Plotting.py` source code by adding new strings to be translated, 
 
 Then compile the .mo file with this command, this is the file that the html will read
 
-msgfmt locales/<language_code>/LC_MESSAGES/dashboard.po -o locales/<language_code>/LC_MESSAGES/dashboard.mo
+`msgfmt locales/<language_code>/LC_MESSAGES/dashboard.po -o locales/<language_code>/LC_MESSAGES/dashboard.mo`
 
 After doing this you need to merge the newly generate .pot file with the existing translations
 
