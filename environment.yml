@@ -9,3 +9,4 @@ dependencies:
    - pgeocode=0.4.1
    - pandas=2.2.2
    - streamlit=1.39.0
+   - plotly=6.5.0
