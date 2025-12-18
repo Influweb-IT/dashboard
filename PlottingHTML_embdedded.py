@@ -99,6 +99,44 @@ def bar_fig(series, title, color):
     fig.update_layout(height=300)
     return fig
 
+# -------------------------
+# Symptoms
+# -------------------------
+
+def bar_fig_symptoms(series, title, color, xaxis_label=""):
+    # Round the values to 2 decimals
+    rounded_values = series.round(2)
+
+    # Create a DataFrame for Plotly Express
+    df = pd.DataFrame({
+        "": series.index,
+        _("Prevalence %"): rounded_values
+    })
+
+    fig = px.bar(
+        df,
+        x = _("Prevalence %"),
+        y = "",
+        labels={"x": xaxis_label, "y": ""},
+        title=title,
+        orientation="h",
+        custom_data=[_("Prevalence %")]  # reference the column name for hover
+    )
+
+    fig.update_traces(
+        marker_color=color,
+        hovertemplate="%{y}: %{customdata[0]:.2f}%<extra></extra>"
+    )
+
+    fig.update_layout(
+        height=max(300, 25*len(series)),
+        yaxis=dict(autorange="reversed")
+    )
+
+    return fig
+
+
+
 
 # -------------------------
 # Geography
@@ -201,6 +239,9 @@ def draw(language: str):
     education = pd.read_csv(f"{input_dir}/education.csv", index_col=0).squeeze()
     occupation = pd.read_csv(f"{input_dir}/occupation.csv", index_col=0).squeeze()
 
+    symptoms = pd.read_csv(f"{input_dir}/symptoms.csv", index_col=0).squeeze()
+
+
     # Replace labels for gender
     gender = gender.rename({
         'Male': _('Male'),
@@ -230,6 +271,36 @@ def draw(language: str):
         'none': _('None'),
         'student': _('Student')
     })
+
+    symptoms = symptoms.rename({
+        'fever': _('Fever'),
+        'chills': _('Chills'),
+        'runny_blocked_nose': _('Runny or blocked nose'),
+        'sneezing': _('Sneezing'),
+        'sore_throat': _('Sore throat'),
+        'cough': _('Cough'),
+        'shortness_breath': _('Shortness of breath'),
+        'headache': _('Headache'),
+        'muscle_joint_pain': _('Muscle/joint pain'),
+        'chest_pain': _('Chest pain'),
+        'malaise': _('Malaise'),
+        'loss_appetite': _('Loss of appetite'),
+        'coloured_sputum': _('Coloured sputum'),
+        'watery_bloodshot_eyes': _('Watery, bloodshot eyes'),
+        'nausea': _('Nausea'),
+        'vomiting': _('Vomiting'),
+        'diarrhoea': _('Diarrhoea'),
+        'stomach_ache': _('Stomach ache'),
+        'rash': _('Rash'),
+        'loss_taste': _('Loss of taste'),
+        'nose_bleed': _('Nose bleed'),
+        'loss_smell': _('Loss of smell'),
+        'sudden_onset': _('Sudden onset'),
+        'sudden_fever': _('Sudden fever'),
+        'other': _('Other')
+        }
+    )
+
 
     # For age, reorder or rename if needed
     age = age.reindex(['<18','18-40','41-65','>65'])
@@ -296,6 +367,15 @@ def draw(language: str):
         legend=_("Participants per 100,000 inhabitants")
     )
 
+
+    symptoms_fig = bar_fig_symptoms(
+        symptoms,
+        _("Symptoms"),
+        "#A44A3F",
+        xaxis_label=_("Prevalence (%)")
+    )
+
+
     #remove unnecessary text from the hovering text
     for fig in [geo_ili, geo_part]:
     # Update hovertemplate
@@ -342,11 +422,10 @@ def draw(language: str):
 
     )
 
-    for fig in demo_figs:  # bar plots
+    for fig in demo_figs + [symptoms_fig]:
         fig.update_traces(
             hovertemplate="%{x}: %{y}<extra></extra>"
-        )
-
+            )
 
     # ---- Assemble HTML (Plotly.js embedded once)
     # ---- Assemble HTML
@@ -366,18 +445,24 @@ def draw(language: str):
 
     <h1>{_('ILI incidence')}</h1>
     {ili_fig.to_html(full_html=False, include_plotlyjs="cdn")}
-    {ari_fig.to_html(full_html=False, include_plotlyjs="cdn")}
+    {ari_fig.to_html(full_html=False, include_plotlyjs=False)}
 
     <h1>{_('Demographic composition')}</h1>
     <div class="grid">
-        {''.join(fig.to_html(full_html=False, include_plotlyjs="cdn") for fig in demo_figs)}
+        {''.join(fig.to_html(full_html=False, include_plotlyjs=False) for fig in demo_figs)}
     </div>
 
     <h1>{_('Geographic aspects')}</h1>
     <div class="map-grid">
-        {geo_ili.to_html(full_html=False, include_plotlyjs="cdn")}
-        {geo_part.to_html(full_html=False, include_plotlyjs="cdn")}
+        {geo_ili.to_html(full_html=False, include_plotlyjs=False)}
+        {geo_part.to_html(full_html=False, include_plotlyjs=False)}
     </div>
+
+    <h1>{_('Symptoms of the week')}</h1>
+    <div class="grid">
+        {symptoms_fig.to_html(full_html=False, include_plotlyjs=False)}
+    </div>
+
 
     </body>
     </html>
