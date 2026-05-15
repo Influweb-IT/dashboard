@@ -64,7 +64,6 @@ def export_survey(
         params["from"] = str(from_ts)
     url = f"{base_url}/v1/data/{study_key}/survey/{survey_key}/response?{urlencode(params)}"
 
-    tmp_path = dest_path + ".part"
     bytes_written = 0
     with requests.get(
         url,
@@ -73,12 +72,11 @@ def export_survey(
         timeout=timeout,
     ) as r:
         r.raise_for_status()
-        with open(tmp_path, "wb") as f:
+        with open(dest_path, "wb") as f:
             for chunk in r.iter_content(chunk_size=1 << 16):
                 if chunk:
                     f.write(chunk)
                     bytes_written += len(chunk)
-    os.replace(tmp_path, dest_path)
     return bytes_written
 
 
