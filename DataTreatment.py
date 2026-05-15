@@ -444,13 +444,12 @@ weekly = weekly_complete.drop_duplicates(['participantID','submission_week'], ke
 ## WEEKLY + INTAKE ##
 #####################
 # Merge weekly and intake according to the most recent intake per each weekly_survey submitted
-frames = []
-for item, group in weekly.groupby(["participantID","weekly_timestamp","submission_date"]):
-    participantID, weekly_timestamp, submission_date = item
-    intake_timestamp = intake[(intake.participantID==participantID) & (intake.intake_timestamp<=weekly_timestamp)].intake_timestamp.max()
-    frames.append({'participantID': participantID, 'submission_date':submission_date, 'intake_timestamp':intake_timestamp})
-data = weekly.merge(pd.DataFrame(frames), on=["participantID", "submission_date"], how="left")
-data = data.merge(intake, on=["participantID", "intake_timestamp"], how="left")
+weekly_sorted = weekly.assign(_ts=pd.to_datetime(weekly.weekly_timestamp)).sort_values("_ts")
+intake_sorted = intake.assign(_ts=pd.to_datetime(intake.intake_timestamp)).sort_values("_ts")
+data = pd.merge_asof(
+    weekly_sorted, intake_sorted,
+    on="_ts", by="participantID", direction="backward",
+).drop(columns=["_ts"])
 assert(data.shape[0]==weekly.shape[0])
 
 
