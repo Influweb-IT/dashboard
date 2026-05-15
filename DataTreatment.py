@@ -209,7 +209,17 @@ def change_regname(x):
         return "Valle d'Aosta"
     else: return x
 
-YEAR_MIN, YEAR_MAX = 2023, 2024
+_today_for_season = datetime.date.today()
+if _today_for_season >= datetime.date(_today_for_season.year, 11, 1):
+    YEAR_MIN = _today_for_season.year
+else:
+    YEAR_MIN = _today_for_season.year - 1
+YEAR_MAX = YEAR_MIN + 1
+current_season = f"{YEAR_MIN}-{YEAR_MAX}"
+
+_season_end = min(_today_for_season, datetime.date(YEAR_MAX, 5, 1))
+_iso_end = _season_end.isocalendar()
+last_week_in_season = f"{_iso_end[0]}-{str(_iso_end[1]).zfill(2)}"
 
 dates = datetime.date.today()
 
@@ -424,7 +434,7 @@ weekly_complete.insert(4, "submission_week", weekly_complete.submission_date.map
 weekly_complete.insert(5, "season", weekly_complete.submission_date.map(date_season))
 
 #keep only current season
-weekly_complete = weekly_complete[weekly_complete.season =='2023-2024']
+weekly_complete = weekly_complete[weekly_complete.season == current_season]
 
 # remove duplicates within the same week, keeping the last one
 weekly = weekly_complete.drop_duplicates(['participantID','submission_week'], keep='last', inplace=False)
@@ -483,7 +493,7 @@ data_ILI = data.copy(deep=True)
 data_ILI = data_ILI[ data_ILI.season.isin(seasons) ] #get only weeks in seasons
 
 ILI_weeks=set(data_ILI.submission_week)
-submission_weeks=[x for x in list(week_season.keys()) if x<='2024-18'] #ILI_weeks
+submission_weeks=[x for x in list(week_season.keys()) if x<=last_week_in_season] #ILI_weeks
 
 data_ILI['symptoms'] = data_ILI['weekly.Q1.0'].apply(lambda x: False if x==True else True)
 
