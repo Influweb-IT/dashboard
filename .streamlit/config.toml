@@ -1,3 +1,15 @@
+[server]
+headless = true
+enableXsrfProtection = false
+enableCORS = true
+baseUrlPath = "dashboard"
+
+[client]
+showSidebarNavigation = false
+
+[browser]
+gatherUsageStats = false
+
 [theme]
 primaryColor="#FF4B4B"
 backgroundColor="#FFFFFF"

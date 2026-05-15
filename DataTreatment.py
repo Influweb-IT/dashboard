@@ -6,6 +6,36 @@ from collections import Counter, defaultdict
 import os, sys, glob, re, datetime
 from datetime import date, timedelta
 
+from season_window import YEAR_MIN, YEAR_MAX, current_season, last_week_in_season
+
+# override with env variables for local development
+_HERE = os.path.dirname(os.path.abspath(__file__))
+RAW_ROOT = os.environ.get('RAW_DIR', '/data/raw')
+output_dir = os.environ.get('DASHBOARD_DATA_DIR', '/data/dashboard')
+
+
+def _find_latest_raw_dir(root: str) -> str:
+    """Return path of the most recent <root>/<YYYY-Www>/ that has a .READY sentinel.
+    Override with the RAW_WEEK env var (e.g. RAW_WEEK=2026-W19)."""
+    week_override = os.environ.get('RAW_WEEK')
+    if week_override:
+        d = os.path.join(root, week_override)
+        if not os.path.isdir(d):
+            raise FileNotFoundError(f"RAW_WEEK={week_override} not found under {root}")
+        return d
+    pat = re.compile(r'^\d{4}-W\d{2}$')
+    candidates = [
+        os.path.join(root, name)
+        for name in sorted(os.listdir(root))
+        if pat.match(name)
+        and os.path.isdir(os.path.join(root, name))
+        and os.path.exists(os.path.join(root, name, '.READY'))
+    ]
+    if not candidates:
+        sys.exit(f'### no ready raw export found under {root} ###\n')
+    return candidates[-1]
+
+
 #Convert weeks with formats like 2014-2 to proper format 2014-02
 def fix_yearweek(date_string):
     year, week =  map(lambda x: int(x), date_string.split('-'))
@@ -209,18 +239,6 @@ def change_regname(x):
         return "Valle d'Aosta"
     else: return x
 
-_today_for_season = datetime.date.today()
-if _today_for_season >= datetime.date(_today_for_season.year, 11, 1):
-    YEAR_MIN = _today_for_season.year
-else:
-    YEAR_MIN = _today_for_season.year - 1
-YEAR_MAX = YEAR_MIN + 1
-current_season = f"{YEAR_MIN}-{YEAR_MAX}"
-
-_season_end = min(_today_for_season, datetime.date(YEAR_MAX, 5, 1))
-_iso_end = _season_end.isocalendar()
-last_week_in_season = f"{_iso_end[0]}-{str(_iso_end[1]).zfill(2)}"
-
 dates = datetime.date.today()
 
 last_week = lastweek(dates)
@@ -280,8 +298,8 @@ for yr_min in range(YEAR_MIN, YEAR_MAX, 1):
             date_season[date] = season
 
 
-path = './data/raw/intake/'
-os.makedirs(path, exist_ok=True)
+raw_dir = _find_latest_raw_dir(RAW_ROOT)
+print(f"Reading raw export from {raw_dir}", flush=True)
 
 # Only the intake columns the analysis needs
 INTAKE_USECOLS = [
@@ -294,13 +312,11 @@ INTAKE_USECOLS = [
     'intake.Q4d.3', 'intake.Q4d.4', 'intake.Q4d.5',  # education
 ]
 
-dfs = []
-for filename in glob.glob(path+'*.csv'):
-    with open(os.path.join(os.getcwd(), filename), 'r') as f: # open in readonly mode
-        # do your stuff
-        dfs.append(pd.read_csv(f, usecols=INTAKE_USECOLS, low_memory=False))
-
-intake_complete = pd.concat(dfs)
+intake_complete = pd.read_csv(
+    os.path.join(raw_dir, 'intake.csv'),
+    usecols=INTAKE_USECOLS,
+    low_memory=False,
+)
 
 ############
 ## INTAKE ##
@@ -309,8 +325,6 @@ intake_complete = pd.concat(dfs)
 intake_complete['timestamp'] = intake_complete.submitted.apply(lambda d: pd.to_datetime(int(d),unit='s'))
 intake_complete.timestamp = pd.to_datetime(intake_complete.timestamp, utc=True).apply(lambda d: d.strftime('%Y-%m-%d %H:%M:%S'))
 intake_complete = intake_complete.sort_values("timestamp", ascending=True)
-
-# some cleaning:
 
 # remove surveys with no global_id , if any
 intake_complete = intake_complete[pd.isnull(intake_complete.participantID)==False]
@@ -358,9 +372,6 @@ intake_complete = intake_complete[intake_complete.age_class!='nan']
 
 intake = intake_complete[["participantID","age_class","gender","reg","edu","occupation","intake_timestamp","intake_submission"]]
 
-path = './data/raw/weekly/'
-os.makedirs(path, exist_ok=True)
-
 # Only the weekly columns the analysis uses
 WEEKLY_USECOLS = [
     'participantID', 'submitted',
@@ -375,14 +386,12 @@ WEEKLY_USECOLS = [
 WEEKLY_DTYPES = {col: 'category' for col in
                  [f'weekly.Q1.{i}' for i in range(24)] + ['weekly.HS.Q5', 'weekly.HS.Q6b']}
 
-dfs = []
-
-for filename in glob.glob(path+'*.csv'):
-    with open(os.path.join(os.getcwd(), filename), 'r') as f: # open in readonly mode
-        # do your stuff
-        dfs.append(pd.read_csv(f, usecols=WEEKLY_USECOLS, dtype=WEEKLY_DTYPES, low_memory=False))
-
-weekly_complete = pd.concat(dfs)
+weekly_complete = pd.read_csv(
+    os.path.join(raw_dir, 'weekly.csv'),
+    usecols=WEEKLY_USECOLS,
+    dtype=WEEKLY_DTYPES,
+    low_memory=False,
+)
 
 
 ############
@@ -422,7 +431,6 @@ weekly_complete[['Q1_0','Fever','Chills','Runny or blocked nose','Sneezing','Sor
 'weekly.Q1.9','weekly.Q1.10', 'weekly.Q1.11', 'weekly.Q1.12','weekly.Q1.13', 'weekly.Q1.14','weekly.Q1.15','weekly.Q1.16',
 'weekly.Q1.17','weekly.Q1.18','weekly.Q1.19','weekly.Q1.20','weekly.Q1.21','weekly.Q1.22','weekly.Q1.23']].map(lambda x: translate(x))
 
-# some cleaning:
 # remove surveys with no global_id, if any, and consider only surveys which have a corresponding intake survey
 weekly_complete = weekly_complete[pd.isnull(weekly_complete.participantID)==False]
 weekly_complete = weekly_complete[weekly_complete.participantID.isin(intake.participantID.unique())]
@@ -564,7 +572,6 @@ for week in sorted(submission_weeks):
         incidence[week] = round( ILI*1.0/active*rescaling, 2 )
     else: incidence[week] = 0
 
-output_dir = './data/dashboard/'
 os.makedirs(output_dir, exist_ok=True)
 
 #save epi values
@@ -581,9 +588,9 @@ intake['age_class'].value_counts().to_csv(os.path.join(output_dir, 'age.csv'), h
 
 # ## Mappa
 
-pop_reg = pd.read_csv('pop_reg.csv',header=0, names=['regione','pop']).set_index('regione').squeeze()
+pop_reg = pd.read_csv(os.path.join(_HERE, 'pop_reg.csv'), header=0, names=['regione', 'pop']).set_index('regione').squeeze()
 
-regioni = gpd.read_file('Limiti01012024_g-2/Reg01012024_g/Reg01012024_g_WGS84.shp')
+regioni = gpd.read_file(os.path.join(_HERE, 'Limiti01012024_g-2/Reg01012024_g/Reg01012024_g_WGS84.shp'))
 regioni = regioni[['DEN_REG','geometry']].set_index('DEN_REG')
 
 partecipanti_reg = data_ILI.reg.value_counts().squeeze().reset_index().set_index('reg')
@@ -601,3 +608,8 @@ ar = ar.reset_index().set_index('reg').rename(columns={'count':'ar'})
 
 reg_map_ar = reg_map.join(ar,how='left').reindex(list(regioni.index)).fillna(0).reset_index()
 reg_map_ar.to_csv(os.path.join(output_dir, 'reg_map.csv'), index=False)
+
+# add sentinel last so Plotting.py's @st.cache_data (keyed on
+# this mtime) only invalidates once all outputs are complete.
+with open(os.path.join(output_dir, '.READY'), 'w') as f:
+    f.write(datetime.datetime.now(datetime.timezone.utc).isoformat() + '\n')
