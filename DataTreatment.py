@@ -270,17 +270,25 @@ for yr_min in range(YEAR_MIN, YEAR_MAX, 1):
             date_season[date] = season
 
 
-# In[241]:
-
-
 path = './data/raw/intake/'
 os.makedirs(path, exist_ok=True)
+
+# Only the intake columns the analysis needs
+INTAKE_USECOLS = [
+    'participantID', 'version', 'submitted',
+    'intake.Q1',      # gender
+    'intake.Q2',      # age / year of birth
+    'intake.Q3.0',    # postal code
+    'intake.Q4',      # occupation
+    'intake.Q4d.0', 'intake.Q4d.1', 'intake.Q4d.2',
+    'intake.Q4d.3', 'intake.Q4d.4', 'intake.Q4d.5',  # education
+]
 
 dfs = []
 for filename in glob.glob(path+'*.csv'):
     with open(os.path.join(os.getcwd(), filename), 'r') as f: # open in readonly mode
         # do your stuff
-        dfs.append(pd.read_csv(f))
+        dfs.append(pd.read_csv(f, usecols=INTAKE_USECOLS, low_memory=False))
 
 intake_complete = pd.concat(dfs)
 
@@ -343,12 +351,26 @@ intake = intake_complete[["participantID","age_class","gender","reg","edu","occu
 path = './data/raw/weekly/'
 os.makedirs(path, exist_ok=True)
 
+# Only the weekly columns the analysis uses
+WEEKLY_USECOLS = [
+    'participantID', 'submitted',
+    'weekly.HS.Q3.0',
+    'weekly.HS.Q4.0',
+    'weekly.HS.Q5',
+    'weekly.HS.Q6.1',
+    'weekly.HS.Q6b',
+] + [f'weekly.Q1.{i}' for i in range(24)]
+
+# Loading Q1.* symptom as 'category' to reduce cell size (from object to int)
+WEEKLY_DTYPES = {col: 'category' for col in
+                 [f'weekly.Q1.{i}' for i in range(24)] + ['weekly.HS.Q5', 'weekly.HS.Q6b']}
+
 dfs = []
 
 for filename in glob.glob(path+'*.csv'):
     with open(os.path.join(os.getcwd(), filename), 'r') as f: # open in readonly mode
         # do your stuff
-        dfs.append(pd.read_csv(f))
+        dfs.append(pd.read_csv(f, usecols=WEEKLY_USECOLS, dtype=WEEKLY_DTYPES, low_memory=False))
 
 weekly_complete = pd.concat(dfs)
 
