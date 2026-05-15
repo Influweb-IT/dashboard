@@ -175,6 +175,7 @@ def _geo_plot(gdf):
 
 
 def draw(language: str):
+    st.html('<script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/child@5/index.umd.js"></script>')
     translation = gettext.translation(domain, localedir=locale_dir, languages=[language])
     translation.install()
 
@@ -185,3 +186,10 @@ def draw(language: str):
     _incidence_plot(series)
     _demographic_composition_plot(series)
     _geo_plot(gdf)
+
+
+st.set_page_config(layout="centered", page_title="Influweb Dashboard")
+
+if __name__ == '__main__':
+    lang = st.query_params.get("lang", "it")
+    draw(lang)

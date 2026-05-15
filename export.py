@@ -71,6 +71,12 @@ def export_survey(
         stream=True,
         timeout=timeout,
     ) as r:
+        if r.status_code == 500:
+            # Management API returns 500 when the study service has no responses.
+            # Write an empty file so downstream aggregation can proceed safely.
+            print(f"  {survey_key}: no responses (500), writing empty file", flush=True)
+            open(dest_path, "wb").close()
+            return 0
         r.raise_for_status()
         with open(dest_path, "wb") as f:
             for chunk in r.iter_content(chunk_size=1 << 16):
