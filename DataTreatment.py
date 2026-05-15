@@ -209,9 +209,18 @@ def change_regname(x):
         return "Valle d'Aosta"
     else: return x
 
-YEAR_MIN, YEAR_MAX = 2023, 2024
+## set current season
 
 dates = datetime.date.today()
+
+## define current season
+if dates.month<5:
+    current_season = str(int(dates.year)-1)+'-'+str(int(dates.year))
+elif dates.month>=11:
+    current_season = str(int(dates.year))+'-'+str(int(dates.year)+1)
+dates, current_season
+
+YEAR_MIN, YEAR_MAX = int(current_season.split('-')[0]), int(current_season.split('-')[1])
 
 last_week = lastweek(dates)
 
@@ -402,7 +411,7 @@ weekly_complete.insert(4, "submission_week", weekly_complete.submission_date.map
 weekly_complete.insert(5, "season", weekly_complete.submission_date.map(date_season))
 
 #keep only current season
-weekly_complete = weekly_complete[weekly_complete.season =='2023-2024']
+weekly_complete = weekly_complete[weekly_complete.season == current_season]
 
 # remove duplicates within the same week, keeping the last one
 weekly = weekly_complete.drop_duplicates(['participantID','submission_week'], keep='last', inplace=False)
@@ -461,7 +470,7 @@ data_ILI = data.copy(deep=True)
 data_ILI = data_ILI[ data_ILI.season.isin(seasons) ] #get only weeks in seasons
 
 ILI_weeks=set(data_ILI.submission_week)
-submission_weeks=[x for x in list(week_season.keys()) if x<='2024-18'] #ILI_weeks
+submission_weeks=[x for x in list(week_season.keys())] #ILI_weeks
 
 data_ILI['symptoms'] = data_ILI['weekly.Q1.0'].apply(lambda x: False if x==True else True)
 
@@ -542,10 +551,12 @@ pd.Series(incidence_ARI).to_frame('incidence').to_csv(os.path.join(output_dir, '
 pd.Series(wau).to_frame('active users').to_csv(os.path.join(output_dir, 'active_users.csv'), header=True)
 
 #save participants values
-intake['gender'].value_counts().to_csv(os.path.join(output_dir, 'gender.csv'), header=True)
-intake['edu'].value_counts().to_csv(os.path.join(output_dir, 'education.csv'), header=True)
-intake['occupation'].value_counts().to_csv(os.path.join(output_dir, 'occupation.csv'), header=True)
-intake['age_class'].value_counts().to_csv(os.path.join(output_dir, 'age.csv'), header=True)
+participants = data.drop_duplicates('participantID')
+
+participants['gender'].value_counts().to_csv(os.path.join(output_dir, 'gender.csv'), header=True)
+participants['edu'].value_counts().to_csv(os.path.join(output_dir, 'education.csv'), header=True)
+participants['occupation'].value_counts().to_csv(os.path.join(output_dir, 'occupation.csv'), header=True)
+participants['age_class'].value_counts().to_csv(os.path.join(output_dir, 'age.csv'), header=True)
 
 
 # ## Mappa
@@ -555,10 +566,10 @@ pop_reg = pd.read_csv('pop_reg.csv',header=0, names=['regione','pop']).set_index
 regioni = gpd.read_file('Limiti01012024_g-2/Reg01012024_g/Reg01012024_g_WGS84.shp')
 regioni = regioni[['DEN_REG','geometry']].set_index('DEN_REG')
 
-partecipanti_reg = data_ILI.reg.value_counts().squeeze().reset_index().set_index('reg')
+partecipanti_reg = data_ILI.reg.value_counts().reindex(list(regioni.index)).fillna(0).squeeze().reset_index().set_index('reg')
 
-part_reg = intake.reg.value_counts().squeeze()/pop_reg * 100000
-part_reg = part_reg.reindex(list(regioni.index))
+part_reg = participants.reg.value_counts().squeeze()/pop_reg * 100000
+part_reg = part_reg.reindex(list(regioni.index)).fillna(0)
 part_reg = part_reg.reset_index().set_index('index')
 
 reg_map = regioni.join(part_reg).reset_index().rename(columns={0:'count'})
