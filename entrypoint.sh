@@ -24,9 +24,10 @@ case "$mode" in
       fi
     done
 
-    exec streamlit run /app/Plotting.py \
-      --server.address=0.0.0.0 \
-      --server.port=8501
+    # start.py imports _data (and all heavy deps) then launches Streamlit via
+    # bootstrap.run() in the same process, so sys.modules and _data._fig_cache
+    # are shared — the first real user gets a warm cache instantly.
+    exec python3 /app/start.py
     ;;
 
   *)
