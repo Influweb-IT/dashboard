@@ -50,7 +50,7 @@ def load_series(mtime):
                 print(f"[_data] loading series (mtime={mtime})", flush=True)
                 r = lambda f: pd.read_csv(
                     os.path.join(_INPUT_DIR, f), index_col=0, header=0
-                ).squeeze()
+                ).iloc[:, 0]
                 _series_data = {
                     "ILI_incidence": r("ILI_incidence.csv"),
                     "ARI_incidence": r("ARI_incidence.csv"),
