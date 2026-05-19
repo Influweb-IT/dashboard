@@ -75,9 +75,13 @@ def export_survey(
             # Management API returns 500 when the study service has no responses.
             # Write an empty file so downstream aggregation can proceed safely.
             print(f"  {survey_key}: no responses (500), writing empty file", flush=True)
+            if os.path.exists(dest_path):
+                os.remove(dest_path)
             open(dest_path, "wb").close()
             return 0
         r.raise_for_status()
+        if os.path.exists(dest_path):
+            os.remove(dest_path)
         with open(dest_path, "wb") as f:
             for chunk in r.iter_content(chunk_size=1 << 16):
                 if chunk:
@@ -101,6 +105,10 @@ def main() -> int:
     out_dir = os.path.join(raw_dir, iso_week_dir_label())
     os.makedirs(out_dir, exist_ok=True)
 
+    ready_path = os.path.join(out_dir, ".READY")
+    if os.path.exists(ready_path):
+        os.remove(ready_path)
+
     token = login(base_url, email, password, instance_id)
 
     intake_bytes = export_survey(
@@ -115,7 +123,7 @@ def main() -> int:
         timeout=timeout,
     )
 
-    with open(os.path.join(out_dir, ".READY"), "w") as f:
+    with open(ready_path, "w") as f:
         f.write(dt.datetime.now(dt.timezone.utc).isoformat() + "\n")
 
     print(

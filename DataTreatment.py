@@ -574,16 +574,29 @@ for week in sorted(submission_weeks):
 
 os.makedirs(output_dir, exist_ok=True)
 
+
+def _gcs_write_csv(df_or_series, path, **kwargs):
+    """Remove an existing GCS-FUSE file before writing; FUSE rejects in-place overwrites."""
+    if os.path.exists(path):
+        os.remove(path)
+    df_or_series.to_csv(path, **kwargs)
+
+
+# Drop sentinel first so the serving pod never reads partial data.
+_ready_path = os.path.join(output_dir, '.READY')
+if os.path.exists(_ready_path):
+    os.remove(_ready_path)
+
 #save epi values
-pd.Series(incidence).to_frame('incidence').to_csv(os.path.join(output_dir, 'ILI_incidence.csv'), header=True)
-pd.Series(incidence_ARI).to_frame('incidence').to_csv(os.path.join(output_dir, 'ARI_incidence.csv'), header=True)
-pd.Series(wau).to_frame('active users').to_csv(os.path.join(output_dir, 'active_users.csv'), header=True)
+_gcs_write_csv(pd.Series(incidence).to_frame('incidence'), os.path.join(output_dir, 'ILI_incidence.csv'), header=True)
+_gcs_write_csv(pd.Series(incidence_ARI).to_frame('incidence'), os.path.join(output_dir, 'ARI_incidence.csv'), header=True)
+_gcs_write_csv(pd.Series(wau).to_frame('active users'), os.path.join(output_dir, 'active_users.csv'), header=True)
 
 #save participants values
-intake['gender'].value_counts().to_csv(os.path.join(output_dir, 'gender.csv'), header=True)
-intake['edu'].value_counts().to_csv(os.path.join(output_dir, 'education.csv'), header=True)
-intake['occupation'].value_counts().to_csv(os.path.join(output_dir, 'occupation.csv'), header=True)
-intake['age_class'].value_counts().to_csv(os.path.join(output_dir, 'age.csv'), header=True)
+_gcs_write_csv(intake['gender'].value_counts(), os.path.join(output_dir, 'gender.csv'), header=True)
+_gcs_write_csv(intake['edu'].value_counts(), os.path.join(output_dir, 'education.csv'), header=True)
+_gcs_write_csv(intake['occupation'].value_counts(), os.path.join(output_dir, 'occupation.csv'), header=True)
+_gcs_write_csv(intake['age_class'].value_counts(), os.path.join(output_dir, 'age.csv'), header=True)
 
 
 # ## Mappa
@@ -593,23 +606,21 @@ pop_reg = pd.read_csv(os.path.join(_HERE, 'pop_reg.csv'), header=0, names=['regi
 regioni = gpd.read_file(os.path.join(_HERE, 'Limiti01012024_g-2/Reg01012024_g/Reg01012024_g_WGS84.shp'))
 regioni = regioni[['DEN_REG','geometry']].set_index('DEN_REG')
 
-partecipanti_reg = data_ILI.reg.value_counts().squeeze().reset_index().set_index('reg')
+partecipanti_reg = data_ILI.reg.value_counts().to_frame('count')
 
-part_reg = intake.reg.value_counts().squeeze()/pop_reg * 100000
-part_reg = part_reg.reindex(list(regioni.index))
-part_reg = part_reg.reset_index().set_index('index')
+part_reg = (intake.reg.value_counts().squeeze() / pop_reg * 100000).reindex(list(regioni.index)).to_frame('count')
 
-reg_map = regioni.join(part_reg).reset_index().rename(columns={0:'count'})
+reg_map = regioni.join(part_reg).reset_index()
 reg_map = reg_map[['DEN_REG','count','geometry']].set_index('DEN_REG')
 
-ar = ((data_ILI[data_ILI.ILI==True].reg.value_counts().reset_index().set_index('reg')/partecipanti_reg).reindex(list(regioni.index)).fillna(0)*100)
-ar = ar.reset_index().set_index('reg').rename(columns={'count':'ar'})
+ili_counts = data_ILI[data_ILI.ILI==True].reg.value_counts()
+ar = (ili_counts / partecipanti_reg['count'] * 100).reindex(list(regioni.index)).fillna(0).rename('ar').to_frame()
 
 
 reg_map_ar = reg_map.join(ar,how='left').reindex(list(regioni.index)).fillna(0).reset_index()
-reg_map_ar.to_csv(os.path.join(output_dir, 'reg_map.csv'), index=False)
+_gcs_write_csv(reg_map_ar, os.path.join(output_dir, 'reg_map.csv'), index=False)
 
 # add sentinel last so Plotting.py's @st.cache_data (keyed on
 # this mtime) only invalidates once all outputs are complete.
-with open(os.path.join(output_dir, '.READY'), 'w') as f:
+with open(_ready_path, 'w') as f:
     f.write(datetime.datetime.now(datetime.timezone.utc).isoformat() + '\n')
