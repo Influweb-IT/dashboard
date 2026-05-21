@@ -9,6 +9,9 @@ def draw(language: str):
     print(f"[draw] start (lang={language})", flush=True)
 
     st.html('<script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/child@5/index.umd.js"></script>')
+    st.markdown("""<style>
+#MainMenu, footer, header { visibility: hidden; }
+</style>""", unsafe_allow_html=True)
 
     _ = _data._t(language)
     mtime = _data.ready_mtime()
@@ -47,7 +50,7 @@ def draw(language: str):
     print(f"[draw] complete in {time.time()-t0:.2f}s", flush=True)
 
 
-st.set_page_config(layout="centered", page_title="Influweb Dashboard")
+st.set_page_config(layout="wide", page_title="Influweb Dashboard")
 
 if __name__ == "__main__":
     lang = st.query_params.get("lang", "it")
