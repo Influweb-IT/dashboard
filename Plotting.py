@@ -14,6 +14,7 @@ def draw(language: str):
     st.html('<script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/child@5/index.umd.js"></script>')
     st.markdown("""<style>
 #MainMenu, footer, header { visibility: hidden; }
+.stMainBlockContainer { padding-top: 1rem; padding-bottom: 1rem; }
 </style>""", unsafe_allow_html=True)
 
     _ = _data._t(language)
