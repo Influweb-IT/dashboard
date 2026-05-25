@@ -123,11 +123,8 @@ def get_ARI(row):
 # Return previous week (es: lastweek(datetime.datetime.strptime('18112019', "%d%m%Y").date()) -> 2019-46)
 ###
 def lastweek(today=date.today()):
-    for i in range(7):
-        x = str((today - timedelta(days=i)).isocalendar()[0])+'-'+str((today - timedelta(days=i)).isocalendar()[1])
-        d1 = str(today.isocalendar()[0])+'-'+str(today.isocalendar()[1])
-        if x!=d1:
-              return fix_yearweek(x)
+    prev = today - timedelta(days=7)
+    return fix_yearweek(str(prev.isocalendar()[0]) + '-' + str(prev.isocalendar()[1]))
 
 def unite(x):
     #print(x)
