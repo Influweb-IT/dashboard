@@ -94,6 +94,7 @@ def load_figures(mtime, language):
     global _fig_mtime, _fig_cache
     with _lock:
         if _fig_mtime != mtime:
+            print(f"[_data] cache invalidated: old_mtime={_fig_mtime} new_mtime={mtime}", flush=True)
             _fig_cache = {}
             _fig_mtime = mtime
         if language in _fig_cache:
