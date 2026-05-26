@@ -1,16 +1,34 @@
 ## Requirements
 
-Install the environment
-
-`conda env create -f environment.yml`
-
-and activate it.
+```sh
+conda env create -f environment.yml
+conda activate <env-name>
+```
 
 ## Generate Dashboard data
 
-`python DataTreatment.py`
+`DataTreatment.py` reads raw exports from a versioned directory and writes processed CSVs.
 
-This script assumes you exported intakes and weeklies under `data/raw`
+**Expected input layout:**
+
+```
+data/raw/
+└── <YYYY-Www>/          # e.g. 2026-W22 — most recent week wins
+    ├── intake.csv
+    ├── weekly.csv
+    └── .READY           # sentinel; must exist or the directory is skipped
+```
+
+The raw data should contain all data you want to analyze, not just the one-week data belonging to the name of the directory.
+The directory are named weekly because in production we want to keep track of the export performed each week, but each export is a full-season export.
+
+Prepare the raw CSVs and run:
+
+```sh
+RAW_DIR=data/raw DASHBOARD_DATA_DIR=data/dashboard python DataTreatment.py
+```
+
+You can override the week with `RAW_WEEK=2026-W22` in case you have multiple weeks and want to run the analysis on a specific set of data
 
 The script generates:
 - active users.csv
