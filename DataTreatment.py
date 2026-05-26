@@ -379,9 +379,10 @@ WEEKLY_USECOLS = [
     'weekly.HS.Q6b',
 ] + [f'weekly.Q1.{i}' for i in range(24)]
 
-# Loading Q1.* symptom as 'category' to reduce cell size (from object to int)
-WEEKLY_DTYPES = {col: 'category' for col in
-                 [f'weekly.Q1.{i}' for i in range(24)] + ['weekly.HS.Q5', 'weekly.HS.Q6b']}
+# Q1.* are boolean-like strings ('TRUE'/'FALSE'/'t'/'f') so we can use category to cut memory.
+# HS.Q5 and HS.Q6b are integer codes compared with == 0
+# we need to keep them as numeric so the comparison works correctly (category would store them as string '0', '1')
+WEEKLY_DTYPES = {col: 'category' for col in [f'weekly.Q1.{i}' for i in range(24)]}
 
 weekly_complete = pd.read_csv(
     os.path.join(raw_dir, 'weekly.csv'),
