@@ -1,0 +1,25 @@
+.git
+.gitignore
+.venv
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+.mypy_cache
+
+# local data dumps
+data
+dump
+mem.txt
+*.pdf
+
+# editor
+.vscode
+.idea
+.DS_Store
+
+# compiled translation outputs (rebuilt every time)
+**/*.mo
+
+.dockerignore
