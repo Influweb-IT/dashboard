@@ -33,9 +33,6 @@ def ready_mtime() -> float:
     except FileNotFoundError:
         return 0.0
 
-
-# ── data ──────────────────────────────────────────────────────────────────────
-
 _series_mtime = None
 _series_data = None
 _gdf_mtime = None
@@ -82,8 +79,6 @@ def load_gdf(mtime):
                 print("[_data] gdf loaded", flush=True)
     return _gdf_data
 
-
-# ── figures ───────────────────────────────────────────────────────────────────
 # Keyed by language; invalidated when mtime changes.
 
 _fig_mtime = None
@@ -204,6 +199,6 @@ def _build_figures(mtime: float, language: str) -> tuple:
 
 def _to_png(fig):
     buf = io.BytesIO()
-    fig.savefig(buf, format="png", bbox_inches="tight", dpi=100)
+    fig.savefig(buf, format="png", bbox_inches="tight", dpi=200)
     plt.close(fig)
     return buf.getvalue()
