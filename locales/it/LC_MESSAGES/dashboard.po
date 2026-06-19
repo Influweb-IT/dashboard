@@ -144,13 +144,13 @@ msgid ""
 msgstr "La seconda mappa mostra la copertura regionale dei partecipanti in ogni regione espressa come numero di partecipanti per 100,000 abitanti"
 
 msgid "ILI attack rate"
-msgstr "ILI attack rate"
+msgstr "ILI percentuale di contagiati"
 
 msgid "Participants"
 msgstr "Partecipanti"
 
 msgid "Attack rate per 100,000 inhabitants in the 2023-2024 season"
-msgstr "Attack rate per 100 abitanti stagione 2025-2026"
+msgstr "Percentuale di contagiati nella stagione 2025-2026"
 
 msgid "Participants per 100,000 inhabitants in the 2023-2024 season"
-msgstr "Partecipanti per 100,000 abitanti stagione 2025-2026"
+msgstr "Partecipanti per 100,000 abitanti nella stagione 2025-2026"
