@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -17,7 +17,10 @@ RUN apt-get update \
 WORKDIR /app
 
 COPY requirements.txt /app/requirements.txt
-RUN pip install -r /app/requirements.txt
+# Upgrade build tooling first to pull in security fixes for pip/setuptools/wheel
+# (and jaraco.context, vendored via setuptools).
+RUN pip install --upgrade pip setuptools wheel \
+  && pip install -r /app/requirements.txt
 
 COPY . /app/
 
