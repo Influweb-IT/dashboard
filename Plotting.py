@@ -29,16 +29,16 @@ def draw(language: str):
     )
     tab1, tab2 = st.tabs([_("ILI"), _("ARI")])
     with tab1:
-        st.image(fig1, use_column_width=True)
+        st.image(fig1, width=True)
     with tab2:
-        st.image(fig2, use_column_width=True)
+        st.image(fig2, width=True)
 
     st.title(_("Demographic composition of participants"))
     st.write(
         _("In this section we show the demographic characteristics of the participants in the current season."),
         _("The graphs below show the demographic composition in terms of gender, age, education, and occupation."),
     )
-    st.image(fig3, use_column_width=True)
+    st.image(fig3, width=True)
 
     st.title(_("Geographic aspects"))
     st.write(
@@ -47,9 +47,9 @@ def draw(language: str):
     )
     tab4, tab5 = st.tabs([_("ILI attack rate"), _("Participants")])
     with tab4:
-        st.image(fig4, use_column_width=True)
+        st.image(fig4, width=True)
     with tab5:
-        st.image(fig5, use_column_width=True)
+        st.image(fig5, width=True)
 
     print(f"[draw] complete in {time.time()-t0:.2f}s", flush=True)
 
