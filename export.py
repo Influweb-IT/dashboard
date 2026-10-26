@@ -59,7 +59,9 @@ def export_survey(
     from_ts: Optional[int] = None,
     timeout: int = 1800,
 ) -> int:
-    params = {"sep": ".", "shortKeys": "false"}
+    # stream=true makes the gateway forward chunks instead of buffering the
+    # whole export; a failure mid-download aborts the connection.
+    params = {"sep": ".", "shortKeys": "false", "stream": "true"}
     if from_ts is not None:
         params["from"] = str(from_ts)
     url = f"{base_url}/v1/data/{study_key}/survey/{survey_key}/response?{urlencode(params)}"
@@ -82,11 +84,16 @@ def export_survey(
         r.raise_for_status()
         if os.path.exists(dest_path):
             os.remove(dest_path)
-        with open(dest_path, "wb") as f:
-            for chunk in r.iter_content(chunk_size=1 << 16):
-                if chunk:
-                    f.write(chunk)
-                    bytes_written += len(chunk)
+        try:
+            with open(dest_path, "wb") as f:
+                for chunk in r.iter_content(chunk_size=1 << 16):
+                    if chunk:
+                        f.write(chunk)
+                        bytes_written += len(chunk)
+        except Exception:
+            # Aborted stream: don't leave a truncated CSV that looks complete.
+            os.remove(dest_path)
+            raise
     return bytes_written
 
 
