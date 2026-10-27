@@ -9,6 +9,7 @@ user session hits a warm cache.
 
 import io
 import os
+import datetime
 import gettext
 import threading
 
@@ -19,6 +20,8 @@ import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 from scipy.stats import beta
+
+import season_window
 
 _INPUT_DIR = os.environ.get('DASHBOARD_DATA_DIR', '/data/dashboard')
 _SENTINEL = os.path.join(_INPUT_DIR, '.READY')
@@ -32,6 +35,12 @@ def ready_mtime() -> float:
         return os.path.getmtime(_SENTINEL)
     except FileNotFoundError:
         return 0.0
+
+
+def season_label(mtime: float) -> str:
+    # The aggregate job covers the season in progress when it writes .READY.
+    return season_window.season_label(datetime.date.fromtimestamp(mtime))
+
 
 _series_mtime = None
 _series_data = None
@@ -123,6 +132,7 @@ def _clopper_pearson(p, n):
 
 def _build_figures(mtime: float, language: str) -> tuple:
     _ = _t(language)
+    season = season_label(mtime)
     series = load_series(mtime)
     gdf = load_gdf(mtime)
 
@@ -178,19 +188,19 @@ def _build_figures(mtime: float, language: str) -> tuple:
     ax3[1, 0].set_title(_("Education")); ax3[1, 0].set_xlabel(""); ax3[1, 0].spines[["right", "top"]].set_visible(False)
     occupation.plot.bar(ax=ax3[1, 1], color="#941B0C")
     ax3[1, 1].set_title(_("Occupation")); ax3[1, 1].set_xlabel(""); ax3[1, 1].spines[["right", "top"]].set_visible(False)
-    fig3.text(0.0, 0.6, _("Number of participants in the 2023-2024 season"), va="center", rotation="vertical")
+    fig3.text(0.0, 0.6, _("Number of participants in the {season} season").format(season=season), va="center", rotation="vertical")
     fig3.tight_layout()
 
     # geo
     fig4, ax4 = plt.subplots(figsize=(6, 6))
     gdf.plot(ax=ax4, cmap="Blues", column="ar", legend=True, edgecolor="w", linewidth=0.3,
-             legend_kwds={"label": _("Attack rate per 100,000 inhabitants in the 2023-2024 season"),
+             legend_kwds={"label": _("Attack rate (% of participants) in the {season} season").format(season=season),
                           "orientation": "vertical", "shrink": 0.6})
     ax4.axis("off")
 
     fig5, ax5 = plt.subplots(figsize=(6, 6))
     gdf.plot(ax=ax5, cmap="Reds", column="count", legend=True, edgecolor="w", linewidth=0.3,
-             legend_kwds={"label": _("Participants per 100,000 inhabitants in the 2023-2024 season"),
+             legend_kwds={"label": _("Participants per 100,000 inhabitants in the {season} season").format(season=season),
                           "orientation": "vertical", "shrink": 0.6})
     ax5.axis("off")
 

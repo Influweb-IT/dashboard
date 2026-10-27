@@ -119,14 +119,14 @@ msgstr ""
 msgid "Occupation"
 msgstr ""
 
-msgid "Number of participants in the 2023-2024 season"
+msgid "Number of participants in the {season} season"
 msgstr ""
 
 msgid "Geographic aspects"
 msgstr ""
 
 msgid ""
-"The first map shows the cumulative incidence in the 2023-2024 season of "
+"The first map shows the cumulative incidence in the {season} season of "
 "probable cases of influenza-like illness (ILI) reported in each region by "
 "Influweb participants."
 msgstr ""
@@ -142,8 +142,8 @@ msgstr ""
 msgid "Participants"
 msgstr ""
 
-msgid "Attack rate per 100,000 inhabitants in the 2023-2024 season"
+msgid "Attack rate (% of participants) in the {season} season"
 msgstr ""
 
-msgid "Participants per 100,000 inhabitants in the 2023-2024 season"
+msgid "Participants per 100,000 inhabitants in the {season} season"
 msgstr ""

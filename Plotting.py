@@ -42,7 +42,7 @@ def draw(language: str):
 
     st.title(_("Geographic aspects"))
     st.write(
-        _("The first map shows the cumulative incidence in the 2023-2024 season of probable cases of influenza-like illness (ILI) reported in each region by Influweb participants."),
+        _("The first map shows the cumulative incidence in the {season} season of probable cases of influenza-like illness (ILI) reported in each region by Influweb participants.").format(season=_data.season_label(mtime)),
         _("The second map shows the regional coverage of participants in each region expressed as the number of participants per 100,000 inhabitants."),
     )
     tab4, tab5 = st.tabs([_("ILI attack rate"), _("Participants")])

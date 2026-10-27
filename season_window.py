@@ -23,6 +23,12 @@ def _compute_year_min(today: _dt.date) -> int:
     return today.year - 1
 
 
+def season_label(d: _dt.date) -> str:
+    """The season a date falls in, e.g. '2025-2026'."""
+    year_min = _compute_year_min(d)
+    return f"{year_min}-{year_min + 1}"
+
+
 def _to_unix(d: _dt.date) -> int:
     return int(_dt.datetime(d.year, d.month, d.day, tzinfo=_dt.timezone.utc).timestamp())
 
