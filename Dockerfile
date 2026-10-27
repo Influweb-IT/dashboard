@@ -26,8 +26,11 @@ COPY requirements.txt constraints.txt /app/
 # Upgrade build tooling first to pull in security fixes for pip/setuptools/wheel
 # (and jaraco.context, vendored via setuptools).
 # constraints.txt pins every transitive package, so rebuilds stay reproducible.
+# pip isn't needed at runtime     
 RUN pip install --upgrade 'pip>=26.2' 'setuptools>=83' wheel \
-  && pip install -r /app/requirements.txt -c /app/constraints.txt
+  && pip install -r /app/requirements.txt -c /app/constraints.txt \
+  && pip check \
+  && pip uninstall -y pip
 
 COPY . /app/
 

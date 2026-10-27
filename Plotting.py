@@ -11,7 +11,6 @@ def draw(language: str):
     
     st.set_page_config(layout="wide", page_title="Influweb Dashboard")
 
-    st.html('<script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/child@5/index.umd.js"></script>')
     st.markdown("""<style>
 #MainMenu, footer, header { visibility: hidden; }
 .stMainBlockContainer { padding-top: 1rem; padding-bottom: 1rem; }
