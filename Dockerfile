@@ -13,6 +13,7 @@ RUN useradd --uid 10001 --user-group --no-create-home --home-dir /app appuser
 # gettext (msgfmt) compiles locale .po -> .mo at container start.
 # libgomp1 is needed by numpy/scipy/pandas wheels at runtime.
 RUN apt-get update \
+  && apt-get upgrade -y --no-install-recommends \
   && apt-get install -y --no-install-recommends \
        gettext \
        libgomp1 \
@@ -21,11 +22,12 @@ RUN apt-get update \
 
 WORKDIR /app
 
-COPY requirements.txt /app/requirements.txt
+COPY requirements.txt constraints.txt /app/
 # Upgrade build tooling first to pull in security fixes for pip/setuptools/wheel
 # (and jaraco.context, vendored via setuptools).
-RUN pip install --upgrade pip setuptools wheel \
-  && pip install -r /app/requirements.txt
+# constraints.txt pins every transitive package, so rebuilds stay reproducible.
+RUN pip install --upgrade 'pip>=26.2' 'setuptools>=83' wheel \
+  && pip install -r /app/requirements.txt -c /app/constraints.txt
 
 COPY . /app/
 
