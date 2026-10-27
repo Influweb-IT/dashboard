@@ -128,7 +128,7 @@ def get_ILI_ECDC(row):
 def get_ARI(row):
     ARI = False
     if row.symptoms == True:  # noqa: E712
-        if row['Sudden onset'] == 0.0:  # 0 = sudden onset
+        if row['Sudden onset'] == True:  # noqa: E712
             if (row.Cough == True or row['Sore throat'] == True  # noqa: E712
                     or row['Shortness of breath'] == True  # noqa: E712
                     or row['Runny or blocked nose'] == True):  # noqa: E712
