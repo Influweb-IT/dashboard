@@ -1,7 +1,5 @@
 [server]
 headless = true
-enableXsrfProtection = false
-enableCORS = false
 baseUrlPath = "dashboard"
 
 [client]
