@@ -6,6 +6,7 @@ baseUrlPath = "dashboard"
 
 [client]
 showSidebarNavigation = false
+showErrorDetails = "none"
 
 [browser]
 gatherUsageStats = false

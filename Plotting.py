@@ -1,7 +1,7 @@
 import time
-import streamlit as st
 
 import _data
+import streamlit as st
 
 
 def draw(language: str):
@@ -14,7 +14,12 @@ def draw(language: str):
     st.markdown("""<style>
 #MainMenu, footer, header { visibility: hidden; }
 .stMainBlockContainer { padding-top: 1rem; padding-bottom: 1rem; }
+html.in-iframe [data-testid="stMain"] { scrollbar-width: none; }
+html.in-iframe [data-testid="stMain"]::-webkit-scrollbar { display: none; }
 </style>""", unsafe_allow_html=True)
+    # Constant inline script (no external code): marks the page when it is shown inside an iframe.
+    st.html("<script>if (window.self !== window.top) document.documentElement.classList.add('in-iframe');</script>",
+            unsafe_allow_javascript=True)
 
     _ = _data._t(language)
     mtime = _data.ready_mtime()
@@ -52,6 +57,9 @@ def draw(language: str):
 
     print(f"[draw] complete in {time.time()-t0:.2f}s", flush=True)
 
+LANGUAGES = ("it", "en")
+
 if __name__ == "__main__":
+    # ?lang= comes from the URL: anything without a catalog falls back to Italian
     lang = st.query_params.get("lang", "it")
-    draw(lang)
+    draw(lang if lang in LANGUAGES else "it")
