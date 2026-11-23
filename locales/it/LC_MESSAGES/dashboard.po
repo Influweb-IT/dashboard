@@ -47,7 +47,7 @@ msgid "ARI"
 msgstr "ARI"
 
 msgid "incidence (‰)"
-msgstr "incidenza"
+msgstr "Incidenza (‰)"
 
 msgid "onset week"
 msgstr "onset week"
